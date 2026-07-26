@@ -7,60 +7,53 @@ const path = require('path');
 
 const app = express();
 
-// Connect to database
 connectDB();
 
-// --- CRITICAL DEBUGGING STEP: FORCE express.json() to be the first middleware ---
-app.use(express.json()); // <--- FIRST middleware
-app.use(cors()); // CORS after body parser
-app.use(express.urlencoded({ extended: false })); // TEMPORARILY DISABLED
+app.set('trust proxy', 1);
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: false, limit: '1mb' }));
 
-// Debug middleware to log incoming request body and headers
-app.use((req, res, next) => {
-    if (req.body !== undefined) {
-        console.log('Incoming request body (after parsing attempt):', req.body);
-    }
-    if (req.headers['content-type'] !== undefined) {
-        console.log('Incoming request headers Content-Type:', req.headers['content-type']);
-    }
-    next();
-});
+const allowedOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
-// Middleware to auto-capture IP, user agent, and referrer for all /api/usage-logs POST requests
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Origin not allowed by CORS'));
+  },
+  credentials: true,
+}));
+
 app.use('/api/usage-logs', (req, res, next) => {
-    req._client_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    req._user_agent = req.headers['user-agent'] || '';
-    req._referrer = req.headers['referer'] || req.headers['referrer'] || '';
-    next();
+  req._client_ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  req._user_agent = req.headers['user-agent'] || '';
+  req._referrer = req.headers.referer || req.headers.referrer || '';
+  next();
 });
 
-// Serve static files from the project root directory
 app.use(express.static(path.join(__dirname)));
-
-// Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Serve static files from specific directories
 app.use('/css', express.static(path.join(__dirname, 'css')));
 app.use('/js', express.static(path.join(__dirname, 'js')));
 app.use('/imgs', express.static(path.join(__dirname, 'imgs')));
 app.use('/fonts', express.static(path.join(__dirname, 'fonts')));
 
-// --- Analytics endpoints are now under /api/logs/analytics/* ---
-// (Handled by routes/logRoutes.js, already registered in routes/index.js)
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', service: 'healthiet' });
+});
 
-// Routes
 app.use('/api', require('./routes/index'));
-
-// Error handling middleware
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-const HOST = process.env.HOST || 'localhost';
+const HOST = process.env.HOST || '0.0.0.0';
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://${HOST}:${PORT}`);
-    console.log(`Index Page: http://${HOST}:${PORT}/index.html`);
+app.listen(PORT, HOST, () => {
+  console.log(`Healthiet server running on ${HOST}:${PORT}`);
 });
 
 module.exports = app;
