@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Auth Test - Healthiet</title>
+    <script src="js/clientLogger.js"></script>
+    <script src="js/auth.js"></script>
+</head>
+<body>
+    <h1>Mentor Authentication Test</h1>
+    <div id="test-results"></div>
+    <button onclick="runTests()">Run Auth Tests</button>
+    <button onclick="simulateLogin()">Simulate Mentor Login</button>
+    <button onclick="clearStorage()">Clear All Storage</button>
+    
+    <script>
+        function runTests() {
+            const resultsDiv = document.getElementById('test-results');
+            let output = '<h3>Authentication Test Results:</h3>';
+            
+            try {
+                // Test 1: AuthManager availability
+                output += '<p><strong>Test 1 - AuthManager:</strong> ';
+                if (window.authManager) {
+                    output += '<span style="color: green;">✓ Available</span></p>';
+                } else {
+                    output += '<span style="color: red;">✗ Not Available</span></p>';
+                    resultsDiv.innerHTML = output;
+                    return;
+                }
+                
+                // Test 2: Authentication status
+                output += '<p><strong>Test 2 - Authentication:</strong> ';
+                const isAuth = window.authManager.isAuthenticated();
+                if (isAuth) {
+                    output += '<span style="color: green;">✓ Authenticated</span></p>';
+                } else {
+                    output += '<span style="color: orange;">- Not Authenticated</span></p>';
+                }
+                
+                // Test 3: User role
+                output += '<p><strong>Test 3 - User Role:</strong> ';
+                const role = window.authManager.getUserRole();
+                output += role || 'None';
+                output += '</p>';
+                
+                // Test 4: User data
+                output += '<p><strong>Test 4 - User Data:</strong></p>';
+                const user = window.authManager.getUser();
+                if (user) {
+                    output += '<pre>' + JSON.stringify(user, null, 2) + '</pre>';
+                } else {
+                    output += '<p>No user data</p>';
+                }
+                
+                // Test 5: Dashboard URL for Mentor
+                output += '<p><strong>Test 5 - Dashboard URL for Mentor:</strong> ';
+                const dashboardUrl = window.authManager.getDashboardUrl('Mentor');
+                output += dashboardUrl + '</p>';
+                
+                // Test 6: Token
+                output += '<p><strong>Test 6 - Token:</strong> ';
+                const token = window.authManager.getToken();
+                if (token) {
+                    output += '<span style="color: green;">✓ Present (' + token.substring(0, 20) + '...)</span></p>';
+                } else {
+                    output += '<span style="color: red;">✗ Missing</span></p>';
+                }
+                
+            } catch (error) {
+                output += '<p style="color: red;"><strong>Error:</strong> ' + error.message + '</p>';
+            }
+            
+            resultsDiv.innerHTML = output;
+        }
+        
+        function simulateLogin() {
+            // Simulate a mentor login with fake but valid structure
+            const mockUser = {
+                id: 'test-mentor-id',
+                email: 'mentor@test.com',
+                role: 'Mentor',
+                firstName: 'Test',
+                lastName: 'Mentor'
+            };
+            
+            const mockToken = 'mock.jwt.token.for.testing';
+            
+            if (window.authManager) {
+                window.authManager.setAuth(mockToken, mockUser);
+                alert('Mock mentor login successful! Run tests to verify.');
+                runTests();
+            }
+        }
+        
+        function clearStorage() {
+            localStorage.clear();
+            alert('Storage cleared!');
+            runTests();
+        }
+        
+        // Auto-run tests when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(runTests, 1000);
+        });
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

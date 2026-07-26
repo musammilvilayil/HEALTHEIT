@@ -1,0 +1,11 @@
+== Info: Host localhost:5000 was resolved.
+== Info: IPv6: ::1
+== Info: IPv4: 127.0.0.1
+== Info:   Trying [::1]:5000...
+== Info:   Trying 127.0.0.1:5000...
+== Info: connect to ::1 port 5000 from :: port 57231 failed: Connection refused
+== Info: connect to 127.0.0.1 port 5000 from 0.0.0.0 port 57233 failed: Connection refused
+== Info: Failed to connect to localhost port 5000 after 2241 ms: Could not connect to server
+== Info: closing connection #0
+== Info: URL rejected: Port number was not a decimal number between 0 and 65535
+== Info: closing connection #-1

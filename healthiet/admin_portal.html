@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Healthiet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Centralized Authentication System -->
+    <script src="js/clientLogger.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Initialize auth manager early
+        window.authManager = new AuthManager();
+    </script>
+    <style>
+        :root {
+            --primary-color: #126663;
+            --secondary-color: #0dc9c2;
+            --light-gray: #f0f0f0;
+            --medium-gray: #d3d3d3;
+            --dark-gray: #666;
+            --text-color: #333;
+            --white: #fff;
+            --shadow-light: rgba(18,102,99,0.08);
+            --shadow-medium: rgba(18,102,99,0.15);
+            --shadow-strong: rgba(18,102,99,0.25);
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --accent-color: #9b59b6;
+            --primary-light: rgba(18, 102, 99, 0.15);
+            --light-bg: #f9f9f9;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px var(--shadow-light);
+            --transition: all 0.3s ease;
+
+            /* Animation timing */
+            --transition-speed: 0.3s;
+            --animation-fade: 1s ease-out;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .sidebar h2 {
+            margin: 0 0 25px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar h2 i {
+            font-size: 28px;
+        }
+
+        .sidebar .sidebar-link {
+            color: white;
+            text-decoration: none;
+            margin: 8px 0;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .sidebar .sidebar-link i {
+            font-size: 18px;
+        }
+
+        .sidebar .sidebar-link.active, .sidebar .sidebar-link:hover {
+            background-color: var(--primary-light);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            background-color: var(--light-bg);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--medium-gray);
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: var(--dark-gray);
+        }
+
+        .date-display {
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px var(--shadow-medium);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-card-title {
+            font-size: 16px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .users .stat-card-icon { background-color: rgba(33, 150, 243, 0.1); color: var(--secondary-color); }
+        .mentors .stat-card-icon { background-color: rgba(76, 175, 80, 0.1); color: var(--primary-color); }
+        .applications .stat-card-icon { background-color: rgba(244, 67, 54, 0.1); color: var(--warning-color); }
+
+        .stat-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+
+        .stat-card-change {
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .positive { color: var(--success-color); }
+        .negative { color: var(--warning-color); }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chart-actions button {
+            background: none;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chart-actions button:hover {
+            background-color: var(--light-bg);
+        }
+
+        .chart-actions button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .chart-wrapper {
+            height: 250px;
+            position: relative;
+        }
+
+        .recent-activities {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+        }
+
+        .activities-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .activities-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .view-all {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .user-activity { background-color: rgba(33, 150, 243, 0.1); color: var(--secondary-color); }
+        .mentor-activity { background-color: rgba(76, 175, 80, 0.1); color: var(--primary-color); }
+        .application-activity { background-color: rgba(244, 67, 54, 0.1); color: var(--warning-color); }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            margin: 0 0 5px 0;
+            font-size: 15px;
+        }
+
+        .activity-time {
+            color: var(--dark-gray);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: var(--dark-gray);
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification badge */
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--warning-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 10px;
+                height: auto;
+            }
+            .sidebar h2 {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            .sidebar .sidebar-link {
+                margin: 5px;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            .main-content {
+                padding: 15px;
+            }
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .user-role {
+            font-size: 0.9em;
+            color: var(--dark-gray);
+        }
+
+        .logout-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2><i class="bi bi-speedometer2"></i> Admin Portal</h2>
+        <a href="admin_portal.html" class="sidebar-link active"><i class="bi bi-grid"></i> Dashboard</a>
+        <a href="user_management.html" class="sidebar-link"><i class="bi bi-people"></i> User Management</a>
+        <a href="mentor_management.html" class="sidebar-link"><i class="bi bi-person-badge"></i> Mentor Management</a>
+        <a href="mentor_applications.html" class="sidebar-link"><i class="bi bi-file-earmark-text"></i> Mentor Applications</a>
+        <a class="sidebar-link" style="margin-top:20px;" data-action="logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            console.log('Admin portal loading - checking authentication...');
+            
+            // Debug authentication status
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token');
+            const user = localStorage.getItem('currentUser');
+            const userRole = localStorage.getItem('userRole'); // Check legacy storage too
+            console.log('Debug - Token exists:', !!token);
+            console.log('Debug - User data:', user);
+            console.log('Debug - Legacy userRole:', userRole);
+            
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    console.log('Debug - Parsed user:', userData);
+                    console.log('Debug - User role:', userData.role);
+                } catch (e) {
+                    console.log('Debug - Error parsing user data:', e);
+                }
+            }
+            
+            // Check authentication with fallback
+            if (!window.authManager.isAuthenticated()) {
+                console.log('User not authenticated, redirecting to login...');
+                window.location.href = 'auth.html';
+                return;
+            }
+            
+            const currentUserRole = window.authManager.getUserRole();
+            console.log('Debug - Current user role from AuthManager:', currentUserRole);
+            
+            // If AuthManager doesn't have user role, check legacy storage
+            if (!currentUserRole && userRole) {
+                console.log('Using legacy userRole:', userRole);
+                // If we have a legacy role, allow access for admin
+                if (userRole.toLowerCase() === 'admin' || userRole.toLowerCase() === 'administrator') {
+                    console.log('Admin authentication successful (legacy)');
+                } else {
+                    console.log('User is not admin (legacy). Role:', userRole);
+                    window.location.href = 'auth.html';
+                    return;
+                }
+            } else if (currentUserRole && (currentUserRole.toLowerCase() === 'admin' || currentUserRole.toLowerCase() === 'administrator')) {
+                console.log('Admin authentication successful');
+            } else {
+                console.log('User is not admin. Role:', currentUserRole);
+                // For now, allow any authenticated user to access for testing
+                console.warn('Warning: Non-admin user accessing admin portal. Role:', currentUserRole);
+            }
+            
+            const logoutBtn = document.querySelector('[data-action="logout"]');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                if (window.authManager && typeof window.authManager.logout === 'function') {
+                    window.authManager.logout();
+                } else {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('userRole');
+                    window.location.href = 'auth.html';
+                }
+                });
+            }
+            });
+        </script>
+        </a>
+    </div>
+    
+    <div class="main-content" id="adminMainContent">
+        <div class="dashboard-header">
+            <div>
+                <h1>Dashboard Overview</h1>
+                <div class="date-display" id="currentDate">Wednesday, July 2, 2025</div>
+            </div>
+            <div class="user-info" data-auth="logged-in" style="display: none;">
+                <div class="user-details">
+                    <span class="user-name" data-user-name>Admin User</span>
+                    <span class="user-role" data-user-role>Admin</span>
+                </div>
+                <button class="logout-btn" data-action="logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card users">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Total Users</div>
+                    <div class="stat-card-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" id="totalUsers">1,842</div>
+                <div class="stat-card-change positive">
+                    <i class="bi bi-arrow-up"></i> <span>12% from last month</span>
+                </div>
+            </div>
+            
+            <div class="stat-card mentors">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Active Mentors</div>
+                    <div class="stat-card-icon">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" id="totalMentors">42</div>
+                <div class="stat-card-change positive">
+                    <i class="bi bi-arrow-up"></i> <span>5% from last month</span>
+                </div>
+            </div>
+            
+            <div class="stat-card applications">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Pending Applications</div>
+                    <div class="stat-card-icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" id="totalApplications">5</div>
+                <div class="stat-card-change negative">
+                    <i class="bi bi-arrow-down"></i> <span>2 since yesterday</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">User Growth</h3>
+                    <div class="chart-actions">
+                        <button id="userGrowthWeek">Week</button>
+                        <button id="userGrowthMonth" class="active">Month</button>
+                        <button id="userGrowthYear">Year</button>
+                    </div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="userGrowthChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">User Distribution</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="userDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="recent-activities">
+            <div class="activities-header">
+                <h3 class="activities-title">Recent Activities</h3>
+                <div class="activities-controls">
+                    <div class="search-filter-container">
+                        <input type="text" id="activitySearch" placeholder="Search activities..." class="activity-search">
+                        <select id="eventTypeFilter" class="activity-filter">
+                            <option value="">All Events</option>
+                            <option value="REGISTER">Registration</option>
+                            <option value="LOGIN">Login</option>
+                            <option value="MENTOR_APPLICATION">Mentor Applications</option>
+                            <option value="PAGE_VIEW">Page Views</option>
+                            <option value="BMI_CALCULATION">BMI Calculations</option>
+                            <option value="CALORIE_CALCULATION">Calorie Calculations</option>
+                        </select>
+                        <button id="clearFilters" class="clear-filters-btn">Clear</button>
+                    </div>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+            </div>
+            <div class="activities-stats">
+                <span id="activitiesCount">Loading...</span>
+            </div>
+            <ul class="activity-list" id="recentActivitiesList">
+                <!-- Activities will be loaded dynamically -->
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize auth manager if not already initialized
+        if (!window.authManager) {
+            window.authManager = new AuthManager();
+        }
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Admin portal loading...');
+            console.log('Auth manager:', window.authManager);
+            console.log('Is authenticated:', window.authManager.isAuthenticated());
+            console.log('User role:', window.authManager.getUserRole());
+            console.log('Full user:', window.authManager.getUser());
+            
+            // Require admin authentication
+            if (!window.authManager.requireAuth('Admin')) {
+                console.error('Admin authentication failed');
+                return;
+            }
+            
+            console.log('Admin authentication passed, loading dashboard...');
+
+            // Set current date
+            const currentDateElement = document.getElementById('currentDate');
+            if (currentDateElement) {
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                currentDateElement.textContent = new Date().toLocaleDateString('en-US', options);
+            }
+
+            // --- Chart.js initialization ---
+            // User Growth Chart
+            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+            let userGrowthChart = new Chart(userGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'User Growth',
+                        data: [0,0,0,0,0,0,0],
+                        borderColor: '#126663',
+                        backgroundColor: 'rgba(18,102,99,0.08)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+            // User Distribution Chart
+            const userDistributionCtx = document.getElementById('userDistributionChart').getContext('2d');
+            let userDistributionChart = new Chart(userDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Mentees', 'Mentors', 'Admins'],
+                    datasets: [{
+                        label: 'User Distribution',
+                        data: [0,0,0,0],
+                        backgroundColor: [
+                            'rgba(33,150,243,0.5)',
+                            'rgba(76,175,80,0.5)',
+                            'rgba(244,67,54,0.5)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Helper to fetch JSON with auth
+            async function fetchWithAuth(url) {
+                const token = localStorage.getItem('authToken') || localStorage.getItem('token') || '';
+                const baseURL = 'http://localhost:5000';
+                const fullURL = url.startsWith('http') ? url : `${baseURL}${url}`;
+                const res = await fetch(fullURL, { headers: { 'Authorization': 'Bearer ' + token } });
+                return res.json();
+            }
+
+            // Function to update user growth chart based on period
+            async function updateUserGrowthChart(period = 'month') {
+                try {
+                    const growthRes = await fetchWithAuth(`/api/logs/analytics/user-growth?period=${period}`);
+                    if (growthRes.success && growthRes.data) {
+                        const labels = growthRes.data.map(item => item.label || item._id);
+                        const data = growthRes.data.map(item => item.count);
+                        
+                        userGrowthChart.data.labels = labels;
+                        userGrowthChart.data.datasets[0].data = data;
+                        userGrowthChart.update();
+                        
+                        console.log(`Updated chart with ${period} data:`, { labels, data });
+                    }
+                } catch (err) {
+                    console.error('Error updating user growth chart:', err);
+                }
+            }
+
+            // Add event listeners for time period buttons
+            document.getElementById('userGrowthWeek').addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.chart-actions button').forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                // Update chart
+                updateUserGrowthChart('week');
+            });
+
+            document.getElementById('userGrowthMonth').addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.chart-actions button').forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                // Update chart
+                updateUserGrowthChart('month');
+            });
+
+            document.getElementById('userGrowthYear').addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.chart-actions button').forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                // Update chart
+                updateUserGrowthChart('year');
+            });
+
+            // Fetch stats
+            let users = 0, mentors = 0, applications = 0;
+            try {
+                // Users count
+                const usersRes = await fetchWithAuth('/api/users');
+                let usersArr = Array.isArray(usersRes.users) ? usersRes.users : (Array.isArray(usersRes.data) ? usersRes.data : []);
+                users = usersArr.length;
+                // Mentors count
+                const mentorsRes = await fetchWithAuth('/api/users?role=Mentor');
+                let mentorsArr = Array.isArray(mentorsRes.users) ? mentorsRes.users : (Array.isArray(mentorsRes.data) ? mentorsRes.data : []);
+                mentors = mentorsArr.length;
+                // Applications count (pending mentor applications)
+                const appsRes = await fetchWithAuth('/api/mentor-applications');
+                let appsArr = Array.isArray(appsRes) ? appsRes : (Array.isArray(appsRes.data) ? appsRes.data : []);
+                applications = appsArr.filter(app => app.mentorApplicationStatus === 'Pending').length;
+            } catch (err) {
+                // fallback: show 0s
+            }
+            document.getElementById('totalUsers').textContent = users.toLocaleString();
+            document.getElementById('totalMentors').textContent = mentors;
+            document.getElementById('totalApplications').textContent = applications;
+            // Hide recipes stat if not needed
+            const recipesCard = document.querySelector('.stat-card.recipes');
+            if (recipesCard) recipesCard.style.display = 'none';
+
+            // Fetch user growth and distribution from correct endpoints
+            let userDistribution = [0,0,0];
+            try {
+                // Load initial user growth chart (default to month)
+                await updateUserGrowthChart('month');
+                
+                // Fetch user distribution chart data
+                const distributionRes = await fetchWithAuth('/api/logs/analytics/user-distribution');
+                if (distributionRes.labels && distributionRes.data) {
+                    userDistributionChart.data.labels = distributionRes.labels;
+                    userDistribution = distributionRes.data;
+                }
+            } catch (err) {
+                console.error('Error fetching chart data:', err);
+                // fallback: keep zeros
+            }
+            // Update distribution chart with fetched data
+            if (userDistributionChart) {
+                userDistributionChart.data.datasets[0].data = userDistribution;
+                userDistributionChart.update();
+            }
+
+            // Fetch recent activities from usage logs
+            const activitiesList = document.getElementById('recentActivitiesList');
+            const activitiesCount = document.getElementById('activitiesCount');
+            let allActivities = []; // Store all activities for filtering
+            
+            activitiesList.innerHTML = '';
+            try {
+                const activitiesRes = await fetchWithAuth('/api/logs/analytics/logs');
+                allActivities = activitiesRes.logs || [];
+                
+                // Function to render activities
+                function renderActivities(activities, limit = 15) {
+                    activitiesList.innerHTML = '';
+                    activitiesCount.textContent = `Showing ${Math.min(activities.length, limit)} of ${activities.length} activities`;
+                    
+                    activities.slice(0, limit).forEach((activity, index) => {
+                        const activityItem = document.createElement('li');
+                        activityItem.className = 'activity-item';
+                        let iconClass, bgClass, description;
+                        
+                        // Map event types to descriptions and icons
+                        switch(activity.eventType) {
+                            case 'REGISTER':
+                                iconClass = 'bi bi-person-plus';
+                                bgClass = 'user-activity';
+                                description = `New user registered: ${activity.userId?.firstName || 'Unknown'} ${activity.userId?.lastName || ''}`;
+                                break;
+                            case 'LOGIN':
+                                iconClass = 'bi bi-box-arrow-in-right';
+                                bgClass = 'user-activity';
+                                description = `User logged in: ${activity.userId?.firstName || 'Unknown'} ${activity.userId?.lastName || ''}`;
+                                break;
+                            case 'MENTOR_APPLICATION':
+                                iconClass = 'bi bi-file-earmark-text';
+                                bgClass = 'application-activity';
+                                description = `New mentor application submitted`;
+                                break;
+                            case 'PAGE_VIEW':
+                                iconClass = 'bi bi-eye';
+                                bgClass = 'user-activity';
+                                description = `Page viewed: ${activity.pageUrl?.split('/').pop() || 'Page'}`;
+                                break;
+                            case 'BMI_CALCULATION':
+                                iconClass = 'bi bi-calculator';
+                                bgClass = 'feature-activity';
+                                description = `BMI calculated: ${activity.details?.results?.bmi || 'N/A'} BMI`;
+                                break;
+                            case 'CALORIE_CALCULATION':
+                                iconClass = 'bi bi-calculator-fill';
+                                bgClass = 'feature-activity';
+                                description = `Calorie needs calculated: ${activity.details?.results?.calories || 'N/A'} cal/day`;
+                                break;
+                            default:
+                                iconClass = 'bi bi-info-circle';
+                                bgClass = 'user-activity';
+                                description = `${activity.eventType.replace(/_/g, ' ')}`;
+                        }
+                        
+                        const activityDate = new Date(activity.timestamp);
+                        const formattedTime = activityDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const formattedDate = activityDate.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                        
+                        // Create detailed view
+                        const userInfo = activity.userId ? 
+                            `${activity.userId.firstName || ''} ${activity.userId.lastName || ''} (${activity.userId.email || 'No email'})` : 
+                            `Guest User`;
+                        
+                        const detailsJson = activity.details ? JSON.stringify(activity.details, null, 2) : 'No additional details';
+                        
+                        activityItem.innerHTML = `
+                            <div class="activity-icon ${bgClass}">
+                                <i class="${iconClass}"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-main">
+                                    <p class="activity-text">${description}</p>
+                                    <div class="activity-time">
+                                        <i class="bi bi-clock"></i>
+                                        ${formattedDate} at ${formattedTime}
+                                    </div>
+                                </div>
+                                <button class="activity-toggle" onclick="toggleActivityDetails(${index})" aria-label="Show details">
+                                    <i class="bi bi-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div class="activity-details" id="activityDetails${index}" style="display: none;">
+                                <div class="details-grid">
+                                    <div class="detail-item">
+                                        <strong>User:</strong>
+                                        <span>${userInfo}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Role:</strong>
+                                        <span>${activity.userRole || 'Guest'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Session ID:</strong>
+                                        <span class="session-id">${activity.sessionId || 'N/A'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>Page URL:</strong>
+                                        <span class="page-url">${activity.pageUrl || 'N/A'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>IP Address:</strong>
+                                        <span>${activity.ipAddress || 'N/A'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <strong>User Agent:</strong>
+                                        <span class="user-agent">${activity.userAgent ? activity.userAgent.substring(0, 100) + (activity.userAgent.length > 100 ? '...' : '') : 'N/A'}</span>
+                                    </div>
+                                    <div class="detail-item full-width">
+                                        <strong>Full Timestamp:</strong>
+                                        <span>${new Date(activity.timestamp).toLocaleString()}</span>
+                                    </div>
+                                    ${activity.details ? `
+                                    <div class="detail-item full-width">
+                                        <strong>Details:</strong>
+                                        <pre class="details-json">${detailsJson}</pre>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                        activitiesList.appendChild(activityItem);
+                    });
+                }
+                
+                // Initial render
+                renderActivities(allActivities);
+                
+                // Search and filter functionality
+                const searchInput = document.getElementById('activitySearch');
+                const eventTypeFilter = document.getElementById('eventTypeFilter');
+                const clearFiltersBtn = document.getElementById('clearFilters');
+                
+                function filterActivities() {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const selectedEventType = eventTypeFilter.value;
+                    
+                    let filtered = allActivities.filter(activity => {
+                        const matchesSearch = !searchTerm || 
+                            (activity.eventType?.toLowerCase().includes(searchTerm)) ||
+                            (activity.userId?.firstName?.toLowerCase().includes(searchTerm)) ||
+                            (activity.userId?.lastName?.toLowerCase().includes(searchTerm)) ||
+                            (activity.userId?.email?.toLowerCase().includes(searchTerm)) ||
+                            (activity.pageUrl?.toLowerCase().includes(searchTerm)) ||
+                            (activity.ipAddress?.toLowerCase().includes(searchTerm));
+                        
+                        const matchesEventType = !selectedEventType || activity.eventType === selectedEventType;
+                        
+                        return matchesSearch && matchesEventType;
+                    });
+                    
+                    renderActivities(filtered, 50); // Show more when filtering
+                }
+                
+                searchInput.addEventListener('input', filterActivities);
+                eventTypeFilter.addEventListener('change', filterActivities);
+                clearFiltersBtn.addEventListener('click', () => {
+                    searchInput.value = '';
+                    eventTypeFilter.value = '';
+                    renderActivities(allActivities);
+                });
+                
+            } catch (err) {
+                console.error('Error loading activities:', err);
+                activitiesList.innerHTML = '<li>No recent activities found.</li>';
+                activitiesCount.textContent = 'No activities found';
+            }
+            
+            // Add global function for toggling activity details
+            window.toggleActivityDetails = function(index) {
+                const detailsDiv = document.getElementById(`activityDetails${index}`);
+                const button = detailsDiv.previousElementSibling.querySelector('.activity-toggle i');
+                
+                if (detailsDiv.style.display === 'none') {
+                    detailsDiv.style.display = 'block';
+                    button.className = 'bi bi-chevron-up';
+                } else {
+                    detailsDiv.style.display = 'none';
+                    button.className = 'bi bi-chevron-down';
+                }
+            };
+        });
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

@@ -1,0 +1,1622 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Balanced Training - HEALTHIET</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Montserrat:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+      :root {
+        --primary-color: #126663;
+        --secondary-color: #0dc9c2;
+        --accent-color: #00b894;
+        --text-color: #fff;
+        --dark-text: #333;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Montserrat", sans-serif;
+        background: var(--primary-color);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+        color: var(--text-color);
+      }
+
+      .main-container {
+        width: 100%;
+        min-height: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .main-header {
+        width: 100%;
+        height: 105px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 57px;
+        position: relative;
+        z-index: 1;
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: headerAnimation 1s ease-out 0.5s forwards;
+      }
+
+      @keyframes headerAnimation {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .brand-logo {
+        color: var(--text-color);
+        font-size: 23px;
+        font-weight: 700;
+        letter-spacing: 0.1px;
+        margin: 0;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .brand-logo::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--secondary-color);
+        transition: width 0.3s ease;
+      }
+
+      .brand-logo:hover::after {
+        width: 100%;
+      }
+
+      .main-nav {
+        display: flex;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .nav-link {
+        color: var(--text-color);
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 32px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border-radius: 25px;
+        letter-spacing: 0.2px;
+        line-height: 28px;
+      }
+
+      .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: rgba(13, 201, 194, 0.1);
+        transition: left 0.3s ease;
+        z-index: -1;
+      }
+
+      .nav-link:hover::before {
+        left: 0;
+      }
+
+      .nav-link:hover {
+        color: var(--secondary-color);
+        transform: translateY(-3px);
+        text-shadow: 0 5px 15px rgba(13, 201, 194, 0.4);
+      }
+
+      .sign-in-button {
+        color: var(--text-color);
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        right: 100px;
+        padding: 10px 32px;
+        border-radius: 25px;
+        cursor: pointer;
+        background-color: var(--secondary-color);
+        border: none;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        text-decoration: none;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
+      }
+
+      .sign-in-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background-color: var(--accent-color);
+        transition: left 0.3s ease;
+        z-index: -1;
+      }
+
+      .sign-in-button:hover::before {
+        left: 0;
+      }
+
+      .sign-in-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(13, 201, 194, 0.3);
+      }
+
+      /* Decorative Elements */
+      .decorative-element-top {
+        width: 300px;
+        height: 300px;
+        position: absolute;
+        right: -35px;
+        top: -10px;
+        flex-shrink: 0;
+        animation: float 6s ease-in-out infinite;
+        z-index: 0;
+        opacity: 0.8;
+      }
+
+      .decorative-element-bottom {
+        position: absolute;
+        width: max-content;
+        height: max-content;
+        padding: 0;
+        bottom: -240px;
+        left: 0;
+        animation: float 6s ease-in-out infinite alternate;
+        z-index: 0;
+        opacity: 0.8;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes float-subtle {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @keyframes pulse-scale {
+        0% {
+          transform: scale(1);
+          opacity: 0.64;
+        }
+        50% {
+          transform: scale(1.03);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.64;
+        }
+      }
+
+      @keyframes slide-in-left {
+        0% {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fade-in-up {
+        0% {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fade-in-slide-up-section {
+        0% {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Main Content Styles */
+      .content-container {
+        position: relative;
+        z-index: 2;
+        padding: 60px 80px 80px;
+        max-width: 1200px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        animation: fadeIn 0.8s ease-out; /* Main content fade-in */
+      }
+
+      .page-header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        color: var(--text-color);
+        font-family: "Open Sans", sans-serif;
+        font-size: 72px;
+        font-weight: 800;
+        letter-spacing: 0.1px;
+        margin-bottom: 0;
+        max-width: 496px;
+        line-height: 75px;
+        text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        animation: slide-in-left 1s ease-out forwards;
+        animation-delay: 0.3s;
+      }
+
+      .page-subtitle {
+        font-size: 20px;
+        font-weight: 400;
+        margin-bottom: 40px;
+        max-width: 700px;
+        line-height: 1.6;
+        opacity: 0.9;
+        padding-bottom: 100px;
+        opacity: 0; /* Initially hidden for animation */
+        animation: fade-in-up 1s ease-out forwards;
+        animation-delay: 0.6s;
+      }
+
+      .back-to-plans-btn {
+        padding: 10px 20px;
+        border-radius: 25px;
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 700;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
+      }
+
+      .back-to-plans-btn:hover {
+        background-color: var(--accent-color);
+        transform: scale(1.05);
+      }
+
+      .utility-bar {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .action-btn {
+        padding: 10px 20px;
+        border-radius: 25px;
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.17);
+      }
+
+      .action-btn:hover {
+        background-color: var(--accent-color);
+        transform: scale(1.05);
+      }
+
+      .daily-quote-section {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 80px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .daily-quote-section .section-title {
+        color: var(--text-color);
+        font-family: "Open Sans", sans-serif;
+        font-size: 36px;
+        font-weight: 800;
+        margin-bottom: 20px;
+      }
+
+      .quote-content .modal-loading {
+        min-height: 80px;
+      }
+
+      .quote-text {
+        color: #f0f8f8;
+        font-family: "Montserrat", sans-serif;
+        font-size: 18px;
+        line-height: 1.6;
+        font-style: italic;
+      }
+
+      .workout-section {
+        margin-bottom: 60px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 0;
+        transform: translateY(50px);
+      }
+
+      .workout-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .workout-section.animate-in {
+        animation: fade-in-slide-up-section 1s ease-out forwards;
+      }
+
+      .day-title {
+        color: var(--text-color);
+        font-family: "Open Sans", sans-serif;
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .day-title i {
+        color: var(--secondary-color);
+        font-size: 36px;
+      }
+
+      .exercise-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .exercise-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        color: var(--text-color);
+      }
+
+      .exercise-item:hover {
+        background: rgba(13, 201, 194, 0.2);
+        transform: translateX(5px);
+      }
+
+      .exercise-item i {
+        color: var(--secondary-color);
+        font-size: 20px;
+        min-width: 25px;
+        transition: color 0.3s ease;
+      }
+
+      .exercise-item.completed i {
+        color: var(--accent-color);
+      }
+
+      .exercise-text {
+        font-family: "Montserrat", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.5;
+      }
+
+      .rest-day {
+        font-style: italic;
+        opacity: 0.8;
+      }
+
+      /* Floating Icons */
+      .floating-icon {
+        position: absolute;
+        z-index: -1;
+        opacity: 0.15;
+        animation: float 6s ease-in-out infinite;
+        color: var(--text-color);
+        font-size: 24px;
+      }
+
+      /* Progress Tracking */
+      .progress-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-top: 60px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      .progress-header {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .progress-item {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+      }
+
+      .progress-bar-container {
+        height: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: var(--secondary-color);
+        border-radius: 5px;
+        transition: width 0.5s ease;
+      }
+
+      /* Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .modal-overlay.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 700px;
+        max-height: 90%;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        transform: translateY(20px);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+
+      .modal-overlay.visible .modal-content {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .modal-close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #333;
+      }
+
+      .modal-title {
+        color: var(--secondary-color);
+        font-family: "Open Sans", sans-serif;
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 20px;
+      }
+
+      .modal-subtitle {
+        color: var(--primary-color);
+        font-family: "Open Sans", sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 25px;
+        margin-bottom: 10px;
+      }
+
+      .modal-text {
+        color: #252b42;
+        font-family: "Montserrat", sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+
+      .modal-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 150px;
+      }
+
+      .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid var(--secondary-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+      }
+
+      .loading-text {
+        color: #252b42;
+        font-family: "Montserrat", sans-serif;
+        font-size: 16px;
+      }
+
+      .modal-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .modal-list li {
+        margin-bottom: 8px;
+        background-color: #f0f8f8;
+        padding: 8px 12px;
+        border-radius: 5px;
+        border-left: 4px solid var(--secondary-color);
+        color: #252b42;
+        font-family: "Montserrat", sans-serif;
+        font-size: 15px;
+      }
+
+      /* New blur div styles */
+      .blur1 {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background-color: var(--secondary-color);
+        filter: blur(200px);
+        opacity: 0.2;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+      }
+
+      .blur {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        background-color: var(--accent-color);
+        filter: blur(200px);
+        opacity: 0.15;
+        top: 20%;
+        right: -100px;
+        z-index: 0;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 991px) {
+        .main-header {
+          padding: 20px 40px;
+        }
+        .content-container {
+          padding: 40px;
+        }
+        .page-header-actions {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+        }
+        .page-title {
+          font-size: 48px;
+          line-height: 52px;
+        }
+        .utility-bar {
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .day-title {
+          font-size: 36px;
+        }
+        .exercise-item {
+          font-size: 24px;
+        }
+        .health-element {
+          width: 300px;
+          height: 300px;
+          right: -50px;
+          top: -100px;
+        }
+        .floating-icon {
+          font-size: 30px;
+        }
+        .blur1 {
+          width: 400px;
+          height: 400px;
+          filter: blur(150px);
+        }
+        .blur {
+          width: 300px;
+          height: 300px;
+          filter: blur(100px);
+          right: -50px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-header {
+          padding: 15px 20px;
+          height: auto;
+          flex-wrap: wrap;
+          gap: 15px;
+        }
+        .main-nav {
+          order: 3;
+          width: 100%;
+          justify-content: center;
+          margin-top: 15px;
+        }
+        .content-container {
+          padding: 30px 20px;
+        }
+        .page-title {
+          font-size: 36px;
+          margin-bottom: 30px;
+        }
+        .page-subtitle {
+          font-size: 16px;
+        }
+        .day-title {
+          font-size: 28px;
+        }
+        .exercise-item {
+          padding: 12px 15px;
+        }
+        .utility-bar {
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+        }
+        .action-btn, .back-to-plans-btn {
+          width: 100%;
+          justify-content: center;
+        }
+        .blur1 {
+          width: 300px;
+          height: 300px;
+          filter: blur(100px);
+        }
+        .blur {
+          width: 200px;
+          height: 200px;
+          filter: blur(70px);
+          right: -30px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-link {
+          padding: 8px 16px;
+          font-size: 12px;
+        }
+        .sign-in-button {
+          padding: 8px 16px;
+          font-size: 12px;
+        }
+        .page-title {
+          font-size: 28px;
+        }
+        .day-title {
+          font-size: 24px;
+        }
+        .exercise-text {
+          font-size: 14px;
+        }
+        .floating-icon {
+          display: none;
+        }
+        .blur1, .blur {
+          display: none; /* Hide on very small screens if they become too intrusive */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="main-container" id="mainContainer">
+      <img
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/a8c04f835448d4d197d0736bad8334dc361dc14b"
+        alt="Decorative top element"
+        class="decorative-element-top"
+        id="decorativeTop"
+      />
+      <img
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/97df0c74b19b5ed25a0646b18a14ccf93fefd544"
+        alt="Decorative bottom element"
+        class="decorative-element-bottom"
+        id="decorativeBottom"
+        style="bottom: -240px"
+      />
+
+      <header class="main-header" id="mainHeader">
+        <a href="index.html" class="brand-logo">HEALTHIET</a>
+        <nav class="main-nav" id="mainNav">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="services.html" class="nav-link">Services</a>
+          <a href="Support.html" class="nav-link">Support</a>
+        </nav>
+        <a href="auth.html">
+          <button class="sign-in-button" id="signInButton">Sign in</button>
+        </a>
+        <span id="profileIconContainer"></span>
+      </header>
+
+      <main class="content-container">
+        <div class="page-header-actions">
+          <h1 class="page-title">Balanced Training Program</h1>
+          <a href="women.html" class="back-to-plans-btn">
+            <i class="fas fa-arrow-left"></i> Back to Plans
+          </a>
+        </div>
+        <p class="page-subtitle">
+          Empower your body with this intelligently designed program for women. Focus on building sustainable strength, improving flexibility, and enhancing overall well-being. Achieve a confident and capable physique that supports your everyday life. Targeted strength development Functional movement patterns Flexibility & mobility focus
+        </p>
+
+        <div class="utility-bar">
+          <button class="action-btn" id="generateWarmupBtn">
+            <i class="fas fa-fire"></i> Generate Warm-up ✨
+          </button>
+          <button class="action-btn" id="generateCooldownBtn">
+            <i class="fas fa-snowflake"></i> Generate Cool-down ✨
+          </button>
+          <button class="action-btn" id="summarizeWorkoutBtn">
+            <i class="fas fa-clipboard-list"></i> Summarize Workout ✨
+          </button>
+          <button class="action-btn" id="printPlanBtn">
+            <i class="fas fa-print"></i> Print Plan
+          </button>
+          <button class="action-btn" id="sharePlanBtn">
+            <i class="fas fa-share-alt"></i> Share Plan
+          </button>
+        </div>
+
+        <section class="daily-quote-section">
+          <h2 class="section-title">Daily Motivation</h2>
+          <div class="quote-content" id="dailyQuoteContent">
+            <div class="modal-loading">
+              <div class="spinner"></div>
+              <p class="loading-text">Loading daily quote...</p>
+            </div>
+            <p class="quote-text" id="dailyQuoteText" style="display: none;"></p>
+          </div>
+        </section>
+
+        <section class="workout-section">
+          <h2 class="day-title"><i class="fas fa-dumbbell"></i> Day 1: Full Body Strength A</h2>
+          <div class="exercise-list">
+            <div class="exercise-item" data-exercise="Goblet Squats">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Goblet Squats: 3x10-12 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Push-ups (on knees or incline if needed)">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Push-ups (on knees or incline if needed): 3xAMRAP</span>
+            </div>
+            <div class="exercise-item" data-exercise="Dumbbell Rows">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Dumbbell Rows: 3x10-12 reps per arm</span>
+            </div>
+            <div class="exercise-item" data-exercise="Overhead Press (Dumbbell)">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Overhead Press (Dumbbell): 3x10-12 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Plank">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Plank: 3 sets, hold for 30-60 seconds</span>
+            </div>
+            <div class="exercise-item rest-day">
+              <i class="fas fa-hourglass-half"></i>
+              <span class="exercise-text">Rest: 60-90 seconds between sets.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="workout-section">
+          <h2 class="day-title"><i class="fas fa-heartbeat"></i> Day 2: Active Recovery & Mobility</h2>
+          <div class="exercise-list">
+            <div class="exercise-item rest-day" data-exercise="Yoga or Pilates">
+              <i class="fas fa-leaf"></i>
+              <span class="exercise-text">Yoga or Pilates: 30-45 minutes focusing on flexibility and core strength.</span>
+            </div>
+            <div class="exercise-item rest-day" data-exercise="Brisk Walking or Light Cycling">
+              <i class="fas fa-biking"></i>
+              <span class="exercise-text">Brisk Walking or Light Cycling: 30 minutes at a comfortable pace.</span>
+            </div>
+            <div class="exercise-item rest-day">
+              <i class="fas fa-info-circle"></i>
+              <span class="exercise-text">Focus on foam rolling and static stretching for major muscle groups.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="workout-section">
+          <h2 class="day-title"><i class="fas fa-running"></i> Day 3: Full Body Strength B</h2>
+          <div class="exercise-list">
+            <div class="exercise-item" data-exercise="Dumbbell Deadlifts">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Dumbbell Deadlifts: 3x8-10 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Dumbbell Bench Press">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Dumbbell Bench Press: 3x10-12 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Lat Pulldowns (or Resistance Band Pulls)">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Lat Pulldowns (or Resistance Band Pulls): 3x10-15 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Lateral Raises">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Lateral Raises: 3x12-15 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Glute Bridges">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Glute Bridges: 3x15-20 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Bird-Dog">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Bird-Dog: 3x10-12 reps per side</span>
+            </div>
+            <div class="exercise-item rest-day">
+              <i class="fas fa-hourglass-half"></i>
+              <span class="exercise-text">Rest: 60-90 seconds between sets.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="workout-section">
+          <h2 class="day-title"><i class="fas fa-spa"></i> Day 4: Cardio & Core</h2>
+          <div class="exercise-list">
+            <div class="exercise-item" data-exercise="Moderate Intensity Cardio">
+              <i class="fas fa-running"></i>
+              <span class="exercise-text">Moderate Intensity Cardio: 30-40 minutes (e.g., jogging, elliptical, stair climber).</span>
+            </div>
+            <div class="exercise-item" data-exercise="Russian Twists">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Russian Twists: 3x15-20 reps per side</span>
+            </div>
+            <div class="exercise-item" data-exercise="Leg Raises">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Leg Raises: 3x15-20 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Side Plank">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Side Plank: 3 sets, hold for 30-45 seconds per side</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="workout-section">
+          <h2 class="day-title"><i class="fas fa-fire"></i> Day 5: Full Body Strength C</h2>
+          <div class="exercise-list">
+            <div class="exercise-item" data-exercise="Sumo Squats">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Sumo Squats: 3x10-12 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Incline Push-ups">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Incline Push-ups: 3xAMRAP</span>
+            </div>
+            <div class="exercise-item" data-exercise="Single-Arm Rows">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Single-Arm Rows: 3x10-12 reps per arm</span>
+            </div>
+            <div class="exercise-item" data-exercise="Arnold Press">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Arnold Press: 3x10-12 reps</span>
+            </div>
+            <div class="exercise-item" data-exercise="Walking Lunges">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Walking Lunges: 3x10-12 reps per leg</span>
+            </div>
+            <div class="exercise-item" data-exercise="Supermans">
+              <i class="fas fa-check-circle"></i>
+              <span class="exercise-text">Supermans: 3x12-15 reps</span>
+            </div>
+            <div class="exercise-item rest-day">
+              <i class="fas fa-hourglass-half"></i>
+              <span class="exercise-text">Rest: 60-90 seconds between sets.</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="progress-container">
+          <h3 class="progress-header">Your Progress This Week</h3>
+          <div class="progress-item">
+            <div class="progress-label">
+              <span>Workouts Completed</span>
+              <span id="completedWorkouts">0/4</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="workoutProgress" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="progress-item">
+            <div class="progress-label">
+              <span>Days Remaining</span>
+              <span id="daysRemaining">5</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="daysProgress" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div class="blur1"></div>
+      <div class="blur"></div>
+
+    <div class="modal-overlay" id="exerciseDetailModal">
+      <div class="modal-content">
+        <button class="modal-close-btn" id="closeExerciseModal">&times;</button>
+        <h2 class="modal-title" id="modalGenericTitle"></h2>
+        <div id="modalGenericContent">
+          <div class="modal-loading" id="modalGenericLoading">
+            <div class="spinner"></div>
+            <p class="loading-text" id="modalGenericLoadingText"></p>
+          </div>
+          <div id="modalGenericDetails" style="display: none;">
+            <div id="exerciseContent">
+              <h3 class="modal-subtitle">Description:</h3>
+              <p class="modal-text" id="exerciseDescription"></p>
+              <h3 class="modal-subtitle">Benefits:</h3>
+              <ul class="modal-list" id="exerciseBenefits"></ul>
+              <h3 class="modal-subtitle">Proper Form:</h3>
+              <p class="modal-text" id="exerciseProperForm"></p>
+            </div>
+
+            <div id="routineContent" style="display: none;">
+              <h3 class="modal-subtitle" id="routineSubtitle"></h3>
+              <ul class="modal-list" id="routineList"></ul>
+            </div>
+
+            <div id="summaryContent" style="display: none;">
+              <h3 class="modal-subtitle" id="summarySubtitle"></h3>
+              <p class="modal-text" id="summaryText"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const decorativeTop = document.getElementById("decorativeTop");
+        const decorativeBottom = document.getElementById("decorativeBottom");
+        const navLinks = document.querySelectorAll(".nav-link");
+        const signInButton = document.getElementById("signInButton");
+        const mainContainer = document.getElementById("mainContainer");
+        const exerciseItems = document.querySelectorAll(".exercise-item");
+        const workoutSections = document.querySelectorAll(".workout-section");
+
+        const exerciseDetailModal = document.getElementById("exerciseDetailModal");
+        const closeExerciseModalBtn = document.getElementById("closeExerciseModal");
+        const modalGenericTitle = document.getElementById("modalGenericTitle");
+        const modalGenericLoading = document.getElementById("modalGenericLoading");
+        const modalGenericLoadingText = document.getElementById("modalGenericLoadingText");
+        const modalGenericDetails = document.getElementById("modalGenericDetails");
+
+        const exerciseContent = document.getElementById("exerciseContent");
+        const exerciseDescription = document.getElementById("exerciseDescription");
+        const exerciseBenefits = document.getElementById("exerciseBenefits");
+        const exerciseProperForm = document.getElementById("exerciseProperForm");
+
+        const routineContent = document.getElementById("routineContent");
+        const routineSubtitle = document.getElementById("routineSubtitle");
+        const routineList = document.getElementById("routineList");
+
+        const summaryContent = document.getElementById("summaryContent");
+        const summarySubtitle = document.getElementById("summarySubtitle");
+        const summaryText = document.getElementById("summaryText");
+
+        const printPlanBtn = document.getElementById("printPlanBtn");
+        const sharePlanBtn = document.getElementById("sharePlanBtn");
+        const dailyQuoteContent = document.getElementById("dailyQuoteContent");
+        const dailyQuoteText = document.getElementById("dailyQuoteText");
+
+        const generateWarmupBtn = document.getElementById("generateWarmupBtn");
+        const generateCooldownBtn = document.getElementById("generateCooldownBtn");
+        const summarizeWorkoutBtn = document.getElementById("summarizeWorkoutBtn");
+
+        const fitnessIcons = [
+          "fas fa-dumbbell", "fas fa-heartbeat", "fas fa-running",
+          "fas fa-weight-hanging", "fas fa-fire", "fas fa-bolt",
+          "fas fa-stopwatch", "fas fa-trophy", "fas fa-medal",
+          "fas fa-fist-raised", "fas fa-mountain", "fas fa-bicycle"
+        ];
+
+        function createFloatingIcon() {
+          const icon = document.createElement("i");
+          icon.className = fitnessIcons[Math.floor(Math.random() * fitnessIcons.length)];
+          icon.classList.add("floating-icon");
+
+          const size = Math.random() * (30 - 15) + 15;
+          icon.style.fontSize = `${size}px`;
+
+          icon.style.top = `${Math.random() * 100}%`;
+          icon.style.left = `${Math.random() * 100}%`;
+
+          icon.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+          const duration = 5 + Math.random() * 10;
+          const delay = Math.random() * 5;
+
+          icon.style.animation = `float ${duration}s ease-in-out infinite`;
+          icon.style.animationDelay = `${delay}s`;
+
+          icon.style.opacity = Math.random() * 0.2 + 0.05;
+
+          mainContainer.appendChild(icon);
+        }
+
+        for (let i = 0; i < 70; i++) {
+          createFloatingIcon();
+        }
+
+        function floatElement(element, duration, distance, delay = 0) {
+          let direction = 1;
+          if (element) {
+            element.style.transition = `transform ${duration}s ease-in-out ${delay}s`;
+
+            function move() {
+              direction = -direction;
+              element.style.transform = `translateY(${direction * distance}px)`;
+              setTimeout(move, duration * 1000);
+            }
+            setTimeout(move, duration * 1000);
+          }
+        }
+
+        if (decorativeTop) {
+          floatElement(decorativeTop, 6, 20);
+        }
+        if (decorativeBottom) {
+          floatElement(decorativeBottom, 6, 20, 2);
+        }
+
+        navLinks.forEach((link) => {
+          link.addEventListener("mouseenter", () => {
+            link.style.color = "#00b894";
+            link.style.transform = "scale(1.1)";
+          });
+          link.addEventListener("mouseleave", () => {
+            link.style.color = "#fff";
+            link.style.transform = "scale(1)";
+          });
+        });
+
+        if (signInButton) {
+          signInButton.addEventListener("mouseenter", () => {
+            signInButton.style.backgroundColor = "#00b894";
+            signInButton.style.transform = "scale(1.05)";
+          });
+          signInButton.addEventListener("mouseleave", () => {
+            signInButton.style.backgroundColor = "#0dc9c2";
+            signInButton.style.transform = "scale(1)";
+          });
+        }
+
+        const existingSignInButton = document.getElementById("signInButton");
+        const mainHeader = document.getElementById("mainHeader");
+
+        function openGenericModal(title, loadingText) {
+          exerciseDetailModal.classList.add("visible");
+          modalGenericTitle.textContent = title;
+          modalGenericLoading.style.display = "flex";
+          modalGenericLoadingText.textContent = loadingText;
+          modalGenericDetails.style.display = "none";
+
+          exerciseContent.style.display = "none";
+          routineContent.style.display = "none";
+          summaryContent.style.display = "none";
+        }
+
+        function closeGenericModal() {
+          exerciseDetailModal.classList.remove("visible");
+        }
+
+        closeExerciseModalBtn.addEventListener("click", closeGenericModal);
+        exerciseDetailModal.addEventListener("click", (e) => {
+          if (e.target === exerciseDetailModal) {
+            closeGenericModal();
+          }
+        });
+
+        async function generateExerciseDetails(exerciseName) {
+          openGenericModal(exerciseName, "Fetching exercise details...");
+
+          const prompt = `Provide a description, key benefits, and proper form instructions for the exercise: "${exerciseName}". Format the output as JSON with fields: "description" (string), "benefits" (array of strings), and "properForm" (string).`;
+          const schema = {
+            type: "OBJECT",
+            properties: {
+              description: { type: "STRING" },
+              benefits: {
+                type: "ARRAY",
+                items: { type: "STRING" },
+              },
+              properForm: { type: "STRING" },
+            },
+            propertyOrdering: ["description", "benefits", "properForm"],
+          };
+
+          try {
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = {
+              contents: chatHistory,
+              generationConfig: {
+                responseMimeType: "application/json",
+                responseSchema: schema,
+              },
+            };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+              const json = result.candidates[0].content.parts[0].text;
+              const parsedJson = JSON.parse(json);
+
+              exerciseDescription.textContent = parsedJson.description;
+              exerciseBenefits.innerHTML = "";
+              parsedJson.benefits.forEach(benefit => {
+                const li = document.createElement("li");
+                li.textContent = benefit;
+                exerciseBenefits.appendChild(li);
+              });
+              exerciseProperForm.textContent = parsedJson.properForm;
+
+              modalGenericLoading.style.display = "none";
+              modalGenericDetails.style.display = "block";
+              exerciseContent.style.display = "block";
+            } else {
+              console.error("Unexpected API response structure:", result);
+              modalGenericLoading.style.display = "none";
+              modalGenericDetails.style.display = "block";
+              exerciseDescription.textContent = "Failed to fetch details. Please try again.";
+              exerciseContent.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            modalGenericLoading.style.display = "none";
+            modalGenericDetails.style.display = "block";
+            exerciseDescription.textContent = "An error occurred while fetching details. Please check your network connection and try again.";
+              exerciseContent.style.display = "block";
+            }
+        }
+
+        exerciseItems.forEach(item => {
+          item.addEventListener("click", () => {
+            const exerciseName = item.dataset.exercise;
+            generateExerciseDetails(exerciseName);
+          });
+        });
+
+        const workoutSectionObserverOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.1,
+        };
+
+        const workoutSectionObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("animate-in");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, workoutSectionObserverOptions);
+
+        workoutSections.forEach((section) => {
+          workoutSectionObserver.observe(section);
+        });
+
+        if (printPlanBtn) {
+          printPlanBtn.addEventListener("click", () => {
+            window.print();
+          });
+        }
+
+        if (sharePlanBtn) {
+          sharePlanBtn.addEventListener("click", async () => {
+            const planTitle = document.querySelector(".page-title").textContent;
+            let planContent = `HEALTHIET - ${planTitle}\n\n`;
+
+            document.querySelectorAll(".workout-section").forEach(section => {
+              const dayTitle = section.querySelector(".day-title")?.textContent;
+              if (dayTitle) {
+                planContent += `${dayTitle}:\n`;
+              }
+              section.querySelectorAll(".exercise-item").forEach(item => {
+                planContent += `- ${item.textContent}\n`;
+              });
+              planContent += "\n";
+            });
+
+            try {
+              await navigator.clipboard.writeText(planContent);
+              alert("Workout plan copied to clipboard!");
+            } catch (err) {
+              console.error('Failed to copy: ', err);
+              alert("Failed to copy workout plan.");
+            }
+          });
+        }
+
+        async function fetchDailyQuote() {
+          dailyQuoteContent.querySelector(".modal-loading").style.display = "flex";
+          dailyQuoteText.style.display = "none";
+
+          const prompt = `Provide a short, inspirational fitness quote for a daily motivation. Just the quote, no author or extra text.`;
+          const schema = {
+            type: "OBJECT",
+            properties: {
+              quote: { type: "STRING" },
+            },
+            propertyOrdering: ["quote"],
+          };
+
+          try {
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = {
+              contents: chatHistory,
+              generationConfig: {
+                responseMimeType: "application/json",
+                responseSchema: schema,
+              },
+            };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+              const json = result.candidates[0].content.parts[0].text;
+              const parsedJson = JSON.parse(json);
+              dailyQuoteText.textContent = parsedJson.quote;
+              dailyQuoteContent.querySelector(".modal-loading").style.display = "none";
+              dailyQuoteText.style.display = "block";
+            } else {
+              console.error("Unexpected API response structure for quote:", result);
+              dailyQuoteText.textContent = "Failed to load quote.";
+              dailyQuoteContent.querySelector(".modal-loading").style.display = "none";
+              dailyQuoteText.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Error calling Gemini API for quote:", error);
+            dailyQuoteText.textContent = "Failed to load quote.";
+            dailyQuoteContent.querySelector(".modal-loading").style.display = "none";
+            dailyQuoteText.style.display = "block";
+          }
+        }
+
+        fetchDailyQuote();
+
+        async function generateRoutine(type) {
+          openGenericModal(`${type} Routine`, `Generating your personalized ${type.toLowerCase()} routine...`);
+
+          const prompt = `Generate a 5-minute ${type === 'Warm-up' ? 'dynamic warm-up' : 'static cool-down'} routine suitable for a balanced training workout for women, including 3-5 exercises/stretches. Provide the output as a JSON object with a 'title' (string) and 'exercises' (array of strings).`;
+          const schema = {
+            type: "OBJECT",
+            properties: {
+              title: { type: "STRING" },
+              exercises: {
+                type: "ARRAY",
+                items: { type: "STRING" },
+              },
+            },
+            propertyOrdering: ["title", "exercises"],
+          };
+
+          try {
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = {
+              contents: chatHistory,
+              generationConfig: {
+                responseMimeType: "application/json",
+                responseSchema: schema,
+              },
+            };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+              const json = result.candidates[0].content.parts[0].text;
+              const parsedJson = JSON.parse(json);
+
+              routineSubtitle.textContent = parsedJson.title;
+              routineList.innerHTML = "";
+              parsedJson.exercises.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                routineList.appendChild(li);
+              });
+
+              modalGenericLoading.style.display = "none";
+              modalGenericDetails.style.display = "block";
+              routineContent.style.display = "block";
+            } else {
+              console.error("Unexpected API response structure:", result);
+              modalGenericLoading.style.display = "none";
+              modalGenericDetails.style.display = "block";
+              routineSubtitle.textContent = "Error";
+              routineList.innerHTML = "<li>Failed to generate routine. Please try again.</li>";
+              routineContent.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            modalGenericLoading.style.display = "none";
+            modalGenericDetails.style.display = "block";
+            routineSubtitle.textContent = "Error";
+            routineList.innerHTML = "<li>An error occurred. Please check your network.</li>";
+            routineContent.style.display = "block";
+          }
+        }
+
+        generateWarmupBtn.addEventListener("click", () => generateRoutine("Warm-up"));
+        generateCooldownBtn.addEventListener("click", () => generateRoutine("Cool-down"));
+
+        async function generateWorkoutSummary() {
+          openGenericModal("Workout Summary", "Summarizing your workout plan...");
+
+          const planTitle = document.querySelector(".page-title").textContent;
+          let fullWorkoutPlanText = `Workout Plan: ${planTitle}\n\n`;
+          document.querySelectorAll(".workout-section").forEach(section => {
+            const dayTitle = section.querySelector(".day-title")?.textContent;
+            if (dayTitle) {
+              fullWorkoutPlanText += `${dayTitle}:\n`;
+            }
+            section.querySelectorAll(".exercise-item").forEach(item => {
+              fullWorkoutPlanText += `- ${item.textContent}\n`;
+            });
+            fullWorkoutPlanText += "\n";
+          });
+
+          const prompt = `Provide a concise summary of the following balanced training workout plan for women, highlighting its main goals, structure (e.g., number of days, focus per day), and overall benefits for a beginner. The workout plan is:\n\n${fullWorkoutPlanText}\n\nFormat the output as a JSON object with a 'summaryTitle' (string) and 'summaryText' (string).`;
+          const schema = {
+            type: "OBJECT",
+            properties: {
+              summaryTitle: { type: "STRING" },
+              summaryText: { type: "STRING" },
+            },
+            propertyOrdering: ["summaryTitle", "summaryText"],
+          };
+
+          try {
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = {
+              contents: chatHistory,
+              generationConfig: {
+                responseMimeType: "application/json",
+                responseSchema: schema,
+              },
+            };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+              const json = result.candidates[0].content.parts[0].text;
+              const parsedJson = JSON.parse(json);
+
+              summarySubtitle.textContent = parsedJson.summaryTitle;
+              summaryText.textContent = parsedJson.summaryText;
+
+              modalGenericLoading.style.display = "none";
+              modalGenericDetails.style.display = "block";
+              summaryContent.style.display = "block";
+            } else {
+              console.error("Unexpected API response structure:", result);
+              modalGenericLoading.style.display = "none";
+              modalGenericDetails.style.display = "block";
+              summarySubtitle.textContent = "Error";
+              summaryText.textContent = "Failed to generate summary. Please try again.";
+              summaryContent.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            modalGenericLoading.style.display = "none";
+            modalGenericDetails.style.display = "block";
+            summarySubtitle.textContent = "Error";
+            summaryText.textContent = "An error occurred. Please check your network.";
+            summaryContent.style.display = "block";
+          }
+        }
+
+        summarizeWorkoutBtn.addEventListener("click", generateWorkoutSummary);
+
+        // Progress tracking
+        function updateProgress() {
+          const today = new Date().getDay(); // 0 (Sunday) to 6 (Saturday)
+          let completedWorkoutsCount = 0;
+
+          // Days 1, 3, 5 are workout days
+          const workoutDays = [1, 3, 5];
+          workoutDays.forEach(dayIndex => {
+            if (today >= dayIndex) {
+              completedWorkoutsCount++;
+            }
+          });
+
+          const totalWorkouts = 3; // Total actual workout days
+          const workoutProgressPercent = (completedWorkoutsCount / totalWorkouts) * 100;
+
+          document.getElementById("completedWorkouts").textContent = `${completedWorkoutsCount}/${totalWorkouts}`;
+          document.getElementById("workoutProgress").style.width = `${workoutProgressPercent}%`;
+
+          const totalDaysInPlan = 5; // Total days in the displayed plan
+          const daysRemaining = Math.max(0, totalDaysInPlan - today); // Days left in the 5-day cycle
+          const daysProgressPercent = ((totalDaysInPlan - daysRemaining) / totalDaysInPlan) * 100;
+
+          document.getElementById("daysRemaining").textContent = daysRemaining;
+          document.getElementById("daysProgress").style.width = `${daysProgressPercent}%`;
+        }
+
+        updateProgress();
+
+        // Exercise item click handler for completion
+        document.querySelectorAll(".exercise-item").forEach(item => {
+          item.addEventListener("click", function() {
+            this.classList.toggle("completed");
+            const icon = this.querySelector("i");
+            if (this.classList.contains("completed")) {
+              icon.className = "fas fa-check-circle";
+              icon.style.color = "var(--accent-color)";
+            } else {
+              icon.className = "fas fa-check-circle";
+              icon.style.color = "var(--secondary-color)";
+            }
+            updateProgress();
+          });
+        });
+      });
+    </script>
+    <script src="js/globalAuth.js"></script>
+  </body>
+    <!--#include file="components/universal-footer.html" -->
+</html>

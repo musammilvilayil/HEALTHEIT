@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose Your Plan - HEALTHIET</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Open+Sans:wght@800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .plans-container {
+        max-width: none;
+        margin-left: auto;
+        margin-right: auto;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background-color: #116966;
+      }
+
+      .plans-header {
+        padding: 0 108px;
+        position: relative;
+      }
+
+      .plans-title-section {
+        margin-top: 50px;
+        margin-bottom: 100px;
+      }
+
+      .plans-main-title {
+        color: #fff;
+        font-family: "Open Sans", sans-serif;
+        font-size: 76px;
+        font-weight: 800;
+        line-height: 75px;
+        letter-spacing: 0.1px;
+        margin-bottom: 40px;
+      }
+
+      .plans-subtitle {
+        color: #252b42;
+        font-family: "Montserrat", sans-serif;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .plans-list {
+        display: flex;
+        flex-direction: column;
+        gap: 100px;
+      }
+
+      .plan-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .plan-content {
+        max-width: 496px;
+      }
+
+      .plan-title {
+        color: #fff;
+        font-family: "Open Sans", sans-serif;
+        font-size: 72px;
+        font-weight: 800;
+        line-height: 75px;
+        letter-spacing: 0.1px;
+        margin-bottom: 16px;
+      }
+
+      .plan-description {
+        color: #252b42;
+        font-family: "Montserrat", sans-serif;
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 24px;
+      }
+
+      .view-plan-btn {
+        display: inline-block;
+        padding: 10px 32px;
+        color: #fff;
+        font-family: "Montserrat", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        border-radius: 29px;
+        cursor: pointer;
+        background-color: #0dc9c2;
+        text-decoration: none;
+      }
+
+      .plan-image {
+        width: 457px;
+        height: 457px;
+        object-fit: contain;
+      }
+
+      .blur-circle {
+        position: absolute;
+        width: 643px;
+        height: 633px;
+        border-radius: 643px;
+        background: #0dc9c2;
+        mix-blend-mode: overlay;
+        filter: blur(200px);
+      }
+
+      .blur-1 {
+        left: 35px;
+        top: -19px;
+      }
+
+      .blur-2 {
+        right: -200px;
+        top: 538px;
+      }
+
+      .blur-3 {
+        left: -242px;
+        top: 1152px;
+      }
+
+      .blur-4 {
+        right: -100px;
+        top: 1765px;
+      }
+
+      @media (max-width: 991px) {
+        .plans-container {
+          max-width: 991px;
+          padding: 20px;
+        }
+
+        .plans-header {
+          padding: 0 40px;
+        }
+
+        .plan-item {
+          flex-direction: column;
+          text-align: center;
+          gap: 40px;
+        }
+
+        .plan-content {
+          max-width: 100%;
+        }
+
+        .plan-image {
+          width: 300px;
+          height: 300px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .plans-container {
+          max-width: 640px;
+        }
+
+        .plans-header {
+          padding: 0 20px;
+        }
+
+        .plans-main-title {
+          font-size: 40px;
+          line-height: 40px;
+        }
+
+        .plans-subtitle {
+          font-size: 16px;
+        }
+
+        .plan-title {
+          font-size: 36px;
+          line-height: 40px;
+        }
+
+        .plan-description {
+          font-size: 16px;
+        }
+
+        .plan-image {
+          width: 200px;
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="plans-container">
+      <!-- Navigation Bar -->
+      <div class="navbar">
+        <div class="logo">HEALTHIET</div>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="services.html">Services</a>
+          <a href="Support.html">Support</a>
+        </div>
+        <div class="sign-in-btn">
+          <a href="auth.html">Sign in</a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="plans-header">
+        <div class="plans-title-section">
+          <h1 class="plans-main-title">
+            Choose<br />
+            Your Plan
+          </h1>
+          <p class="plans-subtitle">Select appropriate plan for your body.</p>
+        </div>
+
+        <div class="plans-list">
+          <!-- Full Body Training -->
+          <div class="plan-item">
+            <div class="plan-content">
+              <h2 class="plan-title">
+                Full Body<br />
+                Training
+              </h2>
+              <p class="plan-description">
+                Full body workout routine for beginners.
+              </p>
+              <a href="workout.html" class="view-plan-btn">View plan</a>
+            </div>
+            <img
+              src="https://placehold.co/457x457/116966/FFF?text=Full+Body"
+              alt="Full body training"
+              class="plan-image"
+            />
+          </div>
+
+          <!-- Fat Loss Training -->
+          <div class="plan-item">
+            <div class="plan-content">
+              <h2 class="plan-title">
+                Fat loss<br />
+                Training
+              </h2>
+              <p class="plan-description">
+                Fat loss workout routine for beginners.
+              </p>
+              <a href="workout.html" class="view-plan-btn">View plan</a>
+            </div>
+            <img
+              src="https://placehold.co/457x457/116966/FFF?text=Fat+Loss"
+              alt="Fat loss training"
+              class="plan-image"
+            />
+          </div>
+
+          <!-- Muscle Gain Training -->
+          <div class="plan-item">
+            <div class="plan-content">
+              <h2 class="plan-title">
+                Muscle gain<br />
+                Training
+              </h2>
+              <p class="plan-description">
+                Muscle gain workout routine for beginners.
+              </p>
+              <a href="workout.html" class="view-plan-btn">View plan</a>
+            </div>
+            <img
+              src="https://placehold.co/457x457/116966/FFF?text=Muscle+Gain"
+              alt="Muscle gain training"
+              class="plan-image"
+            />
+          </div>
+        </div>
+
+        <!-- Decorative Blur Circles -->
+        <div class="blur-circle blur-1"></div>
+        <div class="blur-circle blur-2"></div>
+        <div class="blur-circle blur-3"></div>
+        <div class="blur-circle blur-4"></div>
+      </div>
+
+      <div class="workout-plans-grid-container" id="workoutPlansContainer">
+        <p id="loadingPlansMessage">Loading exciting workout plans...</p>
+        <p id="errorPlansMessage" style="color: red; display: none;"></p>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', fetchWorkoutPlans);
+
+        const workoutPlansContainer = document.getElementById('workoutPlansContainer');
+        const loadingPlansMessage = document.getElementById('loadingPlansMessage');
+        const errorPlansMessage = document.getElementById('errorPlansMessage');
+
+        async function fetchWorkoutPlans() {
+            loadingPlansMessage.style.display = 'block';
+            errorPlansMessage.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/workout-plans', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    loadingPlansMessage.style.display = 'none';
+                    if (data.data.length === 0) {
+                        workoutPlansContainer.innerHTML = '<p>No workout plans found yet. Check back later!</p>';
+                    } else {
+                        renderWorkoutPlans(data.data);
+                    }
+                } else {
+                    loadingPlansMessage.style.display = 'none';
+                    errorPlansMessage.textContent = data.message || 'Failed to load workout plans.';
+                    errorPlansMessage.style.display = 'block';
+                }
+            } catch (err) {
+                loadingPlansMessage.style.display = 'none';
+                errorPlansMessage.textContent = 'Network error. Could not load workout plans.';
+                errorPlansMessage.style.display = 'block';
+            }
+        }
+
+        function renderWorkoutPlans(plans) {
+            workoutPlansContainer.innerHTML = '';
+            plans.forEach(plan => {
+                const planCard = document.createElement('div');
+                planCard.className = 'workout-plan-card';
+                planCard.innerHTML = `
+                    <h3>${plan.title}</h3>
+                    <p>${plan.description || ''}</p>
+                    <div class="plan-details">
+                        <span>Difficulty: ${plan.difficultyLevel || 'N/A'}</span>
+                        <span>Duration: ${plan.durationWeeks ? plan.durationWeeks + ' weeks' : 'N/A'}</span>
+                    </div>
+                    <button class="view-plan-btn" data-id="${plan._id}">View Plan</button>
+                `;
+                workoutPlansContainer.appendChild(planCard);
+            });
+
+            document.querySelectorAll('.view-plan-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const planId = e.target.dataset.id;
+                    alert(`Viewing workout plan: ${planId}`);
+                    // window.location.href = `workout_plan_detail.html?id=${planId}`;
+                });
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+  const mainHeader = document.getElementById("mainHeader") || document.getElementById("header") || document.querySelector("header");
+  const signInButton = document.getElementById("signInButton");
+  function updateAuthUI() {
+    const isLoggedIn = window.isLoggedIn && window.isLoggedIn();
+    if (isLoggedIn) {
+      if (signInButton) signInButton.style.display = 'none';
+      if (!document.getElementById('profileIcon')) {
+        const userRole = window.getUserRole ? window.getUserRole() : 'Public';
+        const dashboardUrl = window.getDashboardUrl ? window.getDashboardUrl(userRole) : 'mentee_dashboard.html';
+        const profileLink = document.createElement('a');
+        profileLink.href = dashboardUrl;
+        profileLink.innerHTML = '<i class="bi bi-person-circle user-profile-icon" id="profileIcon" title="Profile"></i>';
+        profileLink.style.marginLeft = '16px';
+        if (mainHeader) mainHeader.appendChild(profileLink);
+      }
+    } else {
+      if (signInButton) signInButton.style.display = '';
+      const existingIcon = document.getElementById('profileIcon');
+      if (existingIcon && existingIcon.parentNode) {
+        existingIcon.parentNode.remove();
+      }
+    }
+  }
+  updateAuthUI();
+  window.addEventListener('storage', updateAuthUI);
+});
+      </script>
+    </div>
+  </body>
+    <!--#include file="components/universal-footer.html" -->
+</html>

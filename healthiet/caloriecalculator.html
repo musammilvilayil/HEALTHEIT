@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthiet - Calorie Calculator</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;700;800&display=swap"
+        rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #126663;
+            --secondary-color: #0dc9c2;
+            --light-gray: #f0f0f0;
+            --medium-gray: #d3d3d3;
+            --dark-gray: #666;
+            --text-color: #333;
+            --white: #fff;
+            --shadow-light: rgba(18,102,99,0.08);
+            --shadow-medium: rgba(18,102,99,0.15);
+            --shadow-strong: rgba(18,102,99,0.25);
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+
+            /* Animation timing */
+            --transition-speed: 0.3s;
+            --animation-fade: 1s ease-out;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Open Sans", sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Enhanced Background Elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .main-container {
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Healthiet Decorative Elements */
+        .decorative-element-top {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            right: -35px;
+            top: -10px;
+            flex-shrink: 0;
+            animation: float 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .decorative-element-bottom {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            animation: float 6s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Healthiet Main Header */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 140px;
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .brand-logo {
+            color: var(--white);
+            font-family: "Montserrat", sans-serif;
+            font-size: 23px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-link {
+            color: var(--white);
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+
+        .nav-link:hover {
+            color: #00b894;
+            transform: scale(1.1);
+        }
+
+        .sign-in-button {
+            padding: 10px 32px;
+            border-radius: 29px;
+            color: var(--white);
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            background-color: var(--secondary-color);
+            border: none;
+            transition: background-color var(--transition-speed) ease, transform 0.2s ease;
+        }
+
+        .sign-in-button:hover {
+            background-color: #00b894;
+            transform: scale(1.05);
+        }
+
+        .user-profile-icon {
+            font-size: 28px;
+            color: var(--white);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .user-profile-icon:hover {
+            color: #00b894;
+        }
+
+        /* Healthiet Blur Effects */
+        .blur-effect {
+            position: absolute;
+            width: 643px;
+            height: 633px;
+            border-radius: 643px;
+            background: var(--secondary-color);
+            mix-blend-mode: normal;
+            opacity: 0.4;
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        .blur-effect-1 { left: 303px; top: 122px; }
+        .blur-effect-2 { left: 747px; top: 721px; }
+        .blur-effect-3 { left: 61px; top: 1276px; }
+        .blur-effect-4 { left: 797px; top: 2128px; }
+        .blur-effect-5 { left: -266px; top: 2796px; }
+
+        /* Content specific to this new page (Calorie Calculator) */
+        .page-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 
+                0 30px 60px rgba(18, 102, 99, 0.18),
+                0 0 0 1px rgba(255, 255, 255, 0.15);
+            animation: slideUp 1s ease-out;
+            color: var(--text-color);
+            max-width: 1600px;
+            width: 95%;
+            margin: 10px auto;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            height: calc(100vh - 140px);
+            overflow: hidden;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Calorie Calculator specific styles */
+        .calorie-main-wrapper {
+            width: 100%;
+            height: 100%;
+            animation: fade-in var(--animation-fade);
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 30px;
+            align-items: start;
+            overflow: hidden;
+        }
+
+        .calorie-form-container {
+            background: linear-gradient(135deg, rgba(248,249,250,0.6) 0%, rgba(255,255,255,0.8) 100%);
+            border-radius: 25px;
+            padding: 30px;
+            border: 1px solid rgba(18, 102, 99, 0.08);
+            box-shadow: 0 8px 32px rgba(18, 102, 99, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .calorie-container {
+            background: var(--white);
+            border-radius: 25px;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        .calorie-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .calorie-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .unit-toggle, .gender-toggle {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            justify-content: center;
+            background: rgba(18, 102, 99, 0.08);
+            padding: 4px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(18, 102, 99, 0.1);
+        }
+
+        .unit-btn, .gender-btn {
+            padding: 10px 24px;
+            border-radius: 25px;
+            border: none;
+            background: transparent;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            max-width: 180px;
+        }
+
+        .unit-btn::before, .gender-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .unit-btn:hover::before, .gender-btn:hover::before {
+            left: 0;
+        }
+
+        .unit-btn:hover, .gender-btn:hover {
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(18, 102, 99, 0.3);
+        }
+        .unit-btn.active, .gender-btn.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            box-shadow: 0 6px 20px rgba(13,201,194,0.4);
+            transform: scale(1.02);
+        }
+
+        .unit-btn.active::before, .gender-btn.active::before {
+            left: 0;
+        }
+
+        .calorie-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+            position: relative;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-glow {
+            position: relative;
+            display: block;
+        }
+
+        .input-glow::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            filter: blur(8px);
+        }
+
+        .input-glow:focus-within::after {
+            opacity: 0.3;
+        }
+
+        .calorie-form label {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            display: block;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .calorie-form input, .calorie-form select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(18, 102, 99, 0.1);
+            font-size: 0.9rem;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color);
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            appearance: none;
+        }
+
+        .calorie-form select {
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23126663%22%20d%3D%22M287%2C197.971L159.028%2C69.999c-3.613-3.613-7.893-5.424-12.842-5.424s-9.229%2C1.811-12.842%2C5.424L5.424%2C197.971c-3.613%2C3.613-5.424%2C7.893-5.424%2C12.841s1.811%2C9.229%2C5.424%2C12.841l21.282%2C21.282c3.613%2C3.613%2C7.893%2C5.424%2C12.842%2C5.424c4.948%2C0%2C9.229-1.811%2C12.841-5.424l96.657-96.657l96.657%2C96.657c3.613%2C3.613%2C7.893%2C5.424%2C12.841%2C5.424s9.229-1.811%2C12.842-5.424l21.282-21.282c3.613-3.613%2C5.424-7.893%2C5.424-12.841S290.613%2C201.584%2C287%2C197.971z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+            padding-right: 30px;
+        }
+
+        .calorie-form input:focus, .calorie-form select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 
+                0 0 0 3px rgba(13,201,194,0.2),
+                0 8px 25px rgba(13,201,194,0.15);
+            outline: none;
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+        }
+
+        .calorie-form input:hover, .calorie-form select:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(18, 102, 99, 0.1);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .input-row input {
+            flex: 1;
+        }
+
+        .unit-label {
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-left: 8px;
+            white-space: nowrap;
+            background: rgba(18, 102, 99, 0.1);
+            padding: 4px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(18, 102, 99, 0.2);
+        }
+
+        .calorie-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px 0;
+            border-radius: 15px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(18, 102, 99, 0.3);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calorie-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), #00b894);
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+        }
+
+        .calorie-btn:hover::before {
+            left: 0;
+        }
+
+        .calorie-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(18, 102, 99, 0.4);
+        }
+
+        .calorie-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .calorie-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .calorie-result-panel {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            padding: 30px 20px;
+            color: var(--white);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fade-in 1.2s ease-out;
+            box-sizing: border-box;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+            height: 100%;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            overflow-y: auto;
+        }
+
+        .calorie-value {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .calorie-description {
+            font-size: 1rem;
+            opacity: 0.95;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        /* BMR Section */
+        .bmr-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bmr-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .bmr-description {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Calorie Range Section */
+        .calorie-range-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .range-title {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .calorie-range {
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Visual Progress Bar */
+        .calorie-visual {
+            margin: 20px 0;
+        }
+
+        .calorie-bar-container {
+            position: relative;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .calorie-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00b894, #0dc9c2);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 2s ease-out;
+            position: relative;
+        }
+
+        .calorie-markers {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .marker {
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        /* Enhanced Macro Boxes */
+        .macro-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .macro-box {
+            background: var(--white);
+            color: var(--primary-color);
+            border-radius: 12px;
+            padding: 12px 15px;
+            min-width: 90px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 110px;
+            position: relative;
+        }
+
+        .macro-box i {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .macro-box.protein i { color: #e74c3c; }
+        .macro-box.carbs i { color: #f39c12; }
+        .macro-box.fat i { color: #9b59b6; }
+
+        .macro-box span {
+            font-size: 1.2rem;
+            margin-top: 6px;
+            color: var(--secondary-color);
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Health Recommendations */
+        .health-recommendations {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .recommendations-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 12px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .recommendation-card.priority-high {
+            border-left-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .recommendation-card.priority-medium {
+            border-left-color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .recommendation-card.priority-low {
+            border-left-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        /* Quick Tips */
+        .quick-tips {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .tips-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .tip-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            border-left: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .tip-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(2px);
+            transition: all 0.2s ease;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: var(--error-color);
+            font-weight: 600;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1400px) {
+            .calorie-main-wrapper {
+                grid-template-columns: 1fr 350px;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .page-content {
+                max-width: 1200px;
+                padding: 25px 20px;
+                height: calc(100vh - 120px);
+            }
+            
+            .calorie-main-wrapper {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .calorie-result-panel {
+                position: static;
+                height: auto;
+                max-height: 400px;
+            }
+
+            .calorie-form-container {
+                height: auto;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .main-header {
+                padding: 20px 40px;
+            }
+            
+            .page-content {
+                margin: 20px auto;
+                padding: 30px 20px;
+            }
+            
+            .calorie-form-container {
+                padding: 30px 20px;
+            }
+            
+            .calorie-container {
+                padding: 32px 24px 24px 24px;
+            }
+            
+            .calorie-result-panel {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-content {
+                width: 100%;
+                margin: 10px;
+                padding: 25px 15px;
+                border-radius: 20px;
+            }
+            
+            .calorie-form-container {
+                padding: 25px 15px;
+                border-radius: 20px;
+            }
+            
+            .calorie-container {
+                border-radius: 20px;
+                padding: 25px 15px;
+            }
+            
+            .calorie-result-panel {
+                border-radius: 20px;
+                padding: 25px 15px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .main-header {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .main-nav {
+                gap: 20px;
+            }
+            
+            .calorie-title {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .unit-toggle, .gender-toggle {
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
+            }
+            
+            .unit-btn, .gender-btn {
+                max-width: 100%;
+                padding: 12px 20px;
+            }
+            
+            .calorie-form {
+                gap: 16px;
+            }
+            
+            .input-row {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .calorie-value {
+                font-size: 3rem;
+            }
+            
+            .macro-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .macro-box {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .page-content {
+                padding: 20px 10px;
+                margin: 5px;
+            }
+            
+            .calorie-form-container {
+                padding: 20px 10px;
+            }
+            
+            .calorie-container {
+                padding: 20px 10px;
+            }
+            
+            .calorie-result-panel {
+                padding: 20px 10px;
+            }
+            
+            .calorie-form label {
+                font-size: 0.9rem;
+            }
+            
+            .calorie-form input,
+            .calorie-form select {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .calorie-btn {
+                font-size: 1.1rem;
+                padding: 14px 0;
+            }
+            
+            .calorie-value {
+                font-size: 2.5rem;
+            }
+            
+            .calorie-description {
+                font-size: 1rem;
+            }
+            
+            .macro-box {
+                padding: 10px;
+                font-size: 1rem;
+            }
+            
+            .macro-box span {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Screen reader only class */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+    /* Enhanced Input Container Styles */
+    .calorie-form-container {
+        background: linear-gradient(135deg, rgba(248,249,250,0.95) 0%, rgba(255,255,255,0.98) 100%);
+        border-radius: 25px;
+        padding: 35px 30px;
+        border: 1px solid rgba(18, 102, 99, 0.12);
+        box-shadow: 
+            0 15px 35px rgba(18, 102, 99, 0.1),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        height: 100%;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .calorie-form-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 25px 25px 0 0;
+        opacity: 0.8;
+    }
+
+    .calorie-container {
+        background: var(--white);
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(18, 102, 99, 0.08);
+        padding: 30px 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+        height: 100%;
+        border: 1px solid rgba(18, 102, 99, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .calorie-container:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(18, 102, 99, 0.12);
+    }
+
+    .calorie-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.3rem;
+        font-weight: 900;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        text-align: center;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        padding-bottom: 15px;
+        letter-spacing: -0.5px;
+    }
+
+    .calorie-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 3px;
+    }
+
+    .unit-toggle, .gender-toggle {
+        display: flex;
+        gap: 0;
+        margin-bottom: 25px;
+        justify-content: center;
+        background: rgba(18, 102, 99, 0.06);
+        padding: 5px;
+        border-radius: 30px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(18, 102, 99, 0.1);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .unit-btn, .gender-btn {
+        padding: 12px 24px;
+        border-radius: 25px;
+        border: none;
+        background: transparent;
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        flex: 1;
+        max-width: 180px;
+        z-index: 1;
+    }
+
+    .unit-btn::before, .gender-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: -1;
+    }
+
+    .unit-btn:hover::before, .gender-btn:hover::before {
+        left: 0;
+    }
+
+    .unit-btn:hover, .gender-btn:hover {
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(18, 102, 99, 0.25);
+    }
+    
+    .unit-btn.active, .gender-btn.active {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: var(--white);
+        box-shadow: 0 6px 18px rgba(13, 201, 194, 0.35);
+        transform: scale(1.02);
+    }
+
+    .unit-btn.active::before, .gender-btn.active::before {
+        left: 0;
+    }
+
+    .calorie-form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .input-glow {
+        position: relative;
+        display: block;
+    }
+
+    .input-glow::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        opacity: 0;
+        z-index: -1;
+        transition: opacity 0.3s ease;
+        filter: blur(8px);
+    }
+
+    .input-glow:focus-within::after {
+        opacity: 0.25;
+    }
+
+    .calorie-form label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        display: block;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+        letter-spacing: 0.3px;
+    }
+
+    .calorie-form input, .calorie-form select {
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 12px;
+        border: 2px solid rgba(18, 102, 99, 0.12);
+        font-size: 1rem;
+        font-family: 'Open Sans', sans-serif;
+        color: var(--text-color);
+        background: rgba(255, 255, 255, 0.9);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        appearance: none;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .calorie-form select {
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23126663%22%20d%3D%22M287%2C197.971L159.028%2C69.999c-3.613-3.613-7.893-5.424-12.842-5.424s-9.229%2C1.811-12.842%2C5.424L5.424%2C197.971c-3.613%2C3.613-5.424%2C7.893-5.424%2C12.841s1.811%2C9.229%2C5.424%2C12.841l21.282%2C21.282c3.613%2C3.613%2C7.893%2C5.424%2C12.842%2C5.424c4.948%2C0%2C9.229-1.811%2C12.841-5.424l96.657-96.657l96.657%2C96.657c3.613%2C3.613%2C7.893%2C5.424%2C12.841%2C5.424s9.229-1.811%2C12.842-5.424l21.282-21.282c3.613-3.613%2C5.424-7.893%2C5.424-12.841S290.613%2C201.584%2C287%2C197.971z%22%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        background-size: 14px;
+        padding-right: 40px;
+    }
+
+    .calorie-form input:focus, .calorie-form select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 
+            0 0 0 3px rgba(13, 201, 194, 0.15),
+            0 8px 20px rgba(13, 201, 194, 0.12);
+        outline: none;
+        background: rgba(255, 255, 255, 0.98);
+        transform: translateY(-2px);
+    }
+
+    .calorie-form input:hover, .calorie-form select:hover {
+        border-color: rgba(18, 102, 99, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(18, 102, 99, 0.08);
+    }
+
+    .input-row {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .input-row input {
+        flex: 1;
+    }
+
+    .unit-label {
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 600;
+        margin-left: 8px;
+        white-space: nowrap;
+        background: rgba(18, 102, 99, 0.08);
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(18, 102, 99, 0.15);
+        min-width: 45px;
+        text-align: center;
+    }
+
+    .calorie-btn {
+        margin-top: 25px;
+        width: 100%;
+        padding: 16px 0;
+        border-radius: 14px;
+        border: none;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: var(--white);
+        font-size: 1.1rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 25px rgba(18, 102, 99, 0.3);
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .calorie-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+        transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 0;
+    }
+
+    .calorie-btn:hover::before {
+        left: 0;
+    }
+
+    .calorie-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 30px rgba(18, 102, 99, 0.4);
+    }
+
+    .calorie-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .calorie-btn span {
+        position: relative;
+        z-index: 1;
+    }
+
+    .error-message {
+        color: var(--error-color);
+        font-weight: 600;
+        margin-top: 15px;
+        text-align: center;
+        padding: 12px;
+        border-radius: 10px;
+        background: rgba(231, 76, 60, 0.1);
+        border-left: 4px solid var(--error-color);
+        animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-5px); }
+        40%, 80% { transform: translateX(5px); }
+    }
+
+    /* Responsive adjustments for input container */
+    @media (max-width: 1200px) {
+        .calorie-form-container {
+            padding: 30px 25px;
+        }
+        
+        .calorie-container {
+            padding: 25px 20px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .calorie-form-container {
+            padding: 25px 20px;
+        }
+        
+        .calorie-container {
+            padding: 20px 15px;
+        }
+        
+        .calorie-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .calorie-form-container {
+            padding: 20px 15px;
+        }
+        
+        .calorie-container {
+            padding: 20px 15px;
+        }
+        
+        .calorie-title {
+            font-size: 1.8rem;
+        }
+        
+        .unit-toggle, .gender-toggle {
+            flex-direction: column;
+            gap: 8px;
+            padding: 8px;
+        }
+        
+        .unit-btn, .gender-btn {
+            max-width: 100%;
+            padding: 12px 20px;
+        }
+        
+        .input-row {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .calorie-form-container {
+            padding: 15px 10px;
+        }
+        
+        .calorie-container {
+            padding: 15px 10px;
+        }
+        
+        .calorie-title {
+            font-size: 1.6rem;
+        }
+        
+        .calorie-form label {
+            font-size: 0.9rem;
+        }
+        
+        .calorie-form input,
+        .calorie-form select {
+            padding: 12px 14px;
+            font-size: 0.9rem;
+        }
+        
+        .calorie-btn {
+            font-size: 1rem;
+            padding: 14px 0;
+        }
+    }
+</style>
+</head>
+<body>
+    <main class="main-container" id="mainContainer">
+        <img
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/a8c04f835448d4d197d0736bad8334dc361dc14b"
+            alt="Decorative top element"
+            class="decorative-element-top"
+            id="decorativeTop"
+        />
+        <img
+            src="imgs/3.png"
+            alt="Decorative bottom element"
+            class="decorative-element-bottom"
+            id="decorativeBottom"
+        />
+
+        <div class="blur-effect blur-effect-1"></div>
+        <div class="blur-effect blur-effect-2"></div>
+        <div class="blur-effect blur-effect-3"></div>
+        <div class="blur-effect blur-effect-4"></div>
+        <div class="blur-effect blur-effect-5"></div>
+
+        <header class="main-header" id="mainHeader">
+            <a href="index.html" class="brand-logo">HEALTHIET</a>
+            <nav class="main-nav" id="mainNav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="Support.html" class="nav-link">Support</a>
+            </nav>
+            <a href="auth.html">
+                <button class="sign-in-button" id="signInButton">Sign in</button>
+            </a>
+        </header>
+
+        <div class="page-content">
+            <div class="calorie-main-wrapper">
+                <div class="calorie-form-container">
+                    <div class="calorie-container" role="form" aria-label="Calorie Calculator Form">
+                        <h1 class="calorie-title">Calorie Calculator</h1>
+
+                        <div class="unit-toggle" role="radiogroup" aria-label="Select Unit System">
+                            <button type="button" class="unit-btn active" id="unitImperial" aria-pressed="true">Imperial (ft, lbs)</button>
+                            <button type="button" class="unit-btn" id="unitMetric" aria-pressed="false">Metric (cm, kg)</button>
+                        </div>
+
+                        <div class="gender-toggle" role="radiogroup" aria-label="Select Gender">
+                            <button type="button" class="gender-btn active" id="genderMale" aria-pressed="true">Male</button>
+                            <button type="button" class="gender-btn" id="genderFemale" aria-pressed="false">Female</button>
+                        </div>
+
+                        <form class="calorie-form" id="calorieForm" autocomplete="off" novalidate>
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <label for="age">Age</label>
+                                    <div class="input-glow">
+                                        <input type="number" id="age" min="1" max="120" placeholder="e.g., 30" required aria-describedby="age-hint" />
+                                    </div>
+                                    <p id="age-hint" class="sr-only">Enter your age in years, between 1 and 120.</p>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <label for="weight">Weight</label>
+                                    <div class="input-row">
+                                        <div class="input-glow">
+                                            <input type="number" id="weight" min="1" max="1000" step="0.1" placeholder="e.g., 150" required aria-describedby="weight-hint" />
+                                        </div>
+                                        <span class="unit-label" id="weightUnit">lbs</span>
+                                    </div>
+                                    <p id="weight-hint" class="sr-only">Enter your weight in pounds or kilograms.</p>
+                                </div>
+                            </div>
+
+                            <div id="imperialFields" class="input-group">
+                                <div class="form-group">
+                                    <label>Height</label>
+                                    <div class="input-row">
+                                        <div class="input-glow">
+                                            <input type="number" id="heightFt" min="1" max="8" placeholder="Feet" required aria-describedby="height-ft-hint" />
+                                        </div>
+                                        <span class="unit-label">ft</span>
+                                        <div class="input-glow">
+                                            <input type="number" id="heightIn" min="0" max="11" placeholder="Inches" required aria-describedby="height-in-hint" />
+                                        </div>
+                                        <span class="unit-label">in</span>
+                                    </div>
+                                    <p id="height-ft-hint" class="sr-only">Enter the feet portion of your height.</p>
+                                    <p id="height-in-hint" class="sr-only">Enter the inches portion of your height (0-11).</p>
+                                </div>
+                            </div>
+
+                            <div id="metricFields" class="input-group" style="display:none;">
+                                <div class="form-group">
+                                    <label for="heightCm">Height</label>
+                                    <div class="input-row">
+                                        <div class="input-glow">
+                                            <input type="number" id="heightCm" min="50" max="250" step="0.1" placeholder="e.g., 175" />
+                                        </div>
+                                        <span class="unit-label">cm</span>
+                                    </div>
+                                    <p id="height-cm-hint" class="sr-only">Enter your height in centimeters, between 50 and 250.</p>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <label for="activity">Activity Level</label>
+                                    <div class="input-glow">
+                                        <select id="activity" required aria-describedby="activity-hint">
+                                            <option value="">Select activity level</option>
+                                            <option value="sedentary">Sedentary (little or no exercise)</option>
+                                            <option value="lightly-active">Lightly active (1-3 days/week exercise)</option>
+                                            <option value="moderately-active">Moderately active (3-5 days/week exercise)</option>
+                                            <option value="very-active">Very active (6-7 days/week exercise)</option>
+                                            <option value="extra-active">Extra active (very hard exercise & physical job)</option>
+                                        </select>
+                                    </div>
+                                    <p id="activity-hint" class="sr-only">Choose how active you are on a weekly basis.</p>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <label for="goal">Goal</label>
+                                    <div class="input-glow">
+                                        <select id="goal" required aria-describedby="goal-hint">
+                                            <option value="maintain">Maintain Weight</option>
+                                            <option value="lose">Lose Weight (~1 lb/week)</option>
+                                            <option value="gain">Gain Weight (~1 lb/week)</option>
+                                        </select>
+                                    </div>
+                                    <p id="goal-hint" class="sr-only">Select your weight goal: maintain, lose, or gain weight.</p>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="calorie-btn"><span>Calculate Calories</span></button>
+                            <div class="error-message" id="errorMessage" role="alert" aria-live="polite" style="display:none;"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="calorie-result-panel" id="calorieResultPanel" style="display:none;" role="region" aria-live="polite" aria-atomic="true">
+                    <div class="result-main-section">
+                        <div class="calorie-value" id="calorieValue" aria-label="Daily Calories Needed">--</div>
+                        <div class="calorie-description">Daily Calories Needed</div>
+                        
+                        <!-- BMR Display -->
+                        <div class="bmr-section">
+                            <div class="bmr-value">BMR: <span id="bmrValue">--</span></div>
+                            <div class="bmr-description">Basal Metabolic Rate</div>
+                        </div>
+
+                        <!-- Calorie Range for Goal -->
+                        <div class="calorie-range-section">
+                            <div class="range-title">Calorie Range for Goal</div>
+                            <div class="calorie-range">
+                                <span id="calorieMin">--</span> - <span id="calorieMax">--</span> calories
+                            </div>
+                        </div>
+
+                        <!-- Visual Progress Bar -->
+                        <div class="calorie-visual">
+                            <div class="calorie-bar-container">
+                                <div class="calorie-bar" id="calorieBar"></div>
+                                <div class="calorie-markers">
+                                    <span class="marker bmr-marker">BMR</span>
+                                    <span class="marker target-marker">Target</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Macronutrients -->
+                        <div class="macro-row">
+                            <div class="macro-box protein" role="group" aria-label="Protein">
+                                <i class="bi bi-droplet-fill"></i>
+                                Protein<span id="proteinValue">--</span>
+                            </div>
+                            <div class="macro-box carbs" role="group" aria-label="Carbohydrates">
+                                <i class="bi bi-lightning-fill"></i>
+                                Carbs<span id="carbsValue">--</span>
+                            </div>
+                            <div class="macro-box fat" role="group" aria-label="Fat">
+                                <i class="bi bi-circle-fill"></i>
+                                Fat<span id="fatValue">--</span>
+                            </div>
+                        </div>
+
+                        <!-- Health Recommendations -->
+                        <div class="health-recommendations">
+                            <div class="recommendations-title">
+                                <i class="bi bi-heart-pulse"></i> Health Recommendations
+                            </div>
+                            <div class="recommendation-cards" id="recommendationCards">
+                                <!-- Dynamic recommendations will be added here -->
+                            </div>
+                        </div>
+
+                        <!-- Quick Tips -->
+                        <div class="quick-tips">
+                            <div class="tips-title">
+                                <i class="bi bi-lightbulb"></i> Quick Tips
+                            </div>
+                            <div class="tips-list" id="tipsList">
+                                <!-- Dynamic tips will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Centralized Authentication System -->
+    <script src="js/globalAuth.js"></script>
+    <script src="js/authInit.js"></script>
+    <script src="js/clientLogger.js"></script>
+    
+    <script>
+        // Initialize authentication system early
+        if (!window.authManager && window.AuthManager) {
+            window.authManager = new AuthManager();
+            console.log('AuthManager initialized in calorie calculator');
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Ensure global message container exists for auth messages
+            if (!document.getElementById('auth-message')) {
+                const msgDiv = document.createElement('div');
+                msgDiv.id = 'auth-message';
+                document.body.appendChild(msgDiv);
+            }
+
+            // Initialize authentication
+            if (window.initAuth && typeof window.initAuth === 'function') {
+                window.initAuth();
+            }
+
+            // Debug authentication state
+            console.log('Calorie Calculator - Initial Auth State:', {
+                hasAuthManager: !!window.authManager,
+                isAuthenticated: window.authManager ? window.authManager.isAuthenticated() : false,
+                userId: window.authManager ? window.authManager.getUserId() : null,
+                userRole: window.authManager ? window.authManager.getUserRole() : null,
+                hasGlobalFunctions: !!(window.getUserId && window.getUserRole),
+                isLoggedInGlobal: window.isLoggedIn ? window.isLoggedIn() : false,
+                token: window.getAuthToken ? window.getAuthToken() : null
+            });
+
+            // Test authentication functions
+            setTimeout(() => {
+                console.log('Calorie Calculator - Auth State after 1 second:', {
+                    hasAuthManager: !!window.authManager,
+                    isAuthenticated: window.authManager ? window.authManager.isAuthenticated() : false,
+                    userId: window.authManager ? window.authManager.getUserId() : null,
+                    userRole: window.authManager ? window.authManager.getUserRole() : null,
+                    globalUserId: window.getUserId ? window.getUserId() : null,
+                    globalUserRole: window.getUserRole ? window.getUserRole() : null,
+                    isLoggedInGlobal: window.isLoggedIn ? window.isLoggedIn() : false,
+                    token: window.getAuthToken ? (window.getAuthToken() ? 'present' : 'null') : 'function not available'
+                });
+            }, 1000);
+
+            const navLinks = document.querySelectorAll(".nav-link");
+            const signInButton = document.getElementById("signInButton");
+            const mainHeader = document.getElementById("mainHeader");
+
+            // Navigation hover effects
+            navLinks.forEach((link) => {
+                link.addEventListener("mouseenter", () => {
+                    link.style.color = "#00b894";
+                    link.style.transform = "scale(1.1)";
+                });
+                link.addEventListener("mouseleave", () => {
+                    link.style.color = "white";
+                    link.style.transform = "scale(1)";
+                });
+            });
+
+            // Sign in button hover effects
+            if (signInButton) {
+                signInButton.addEventListener("mouseenter", () => {
+                    signInButton.style.backgroundColor = "#00b894";
+                    signInButton.style.transform = "scale(1.05)";
+                });
+                signInButton.addEventListener("mouseleave", () => {
+                    signInButton.style.backgroundColor = "#0dc9c2";
+                    signInButton.style.transform = "scale(1)";
+                });
+            }
+
+            // Profile icon logic for authentication
+            function updateAuthUI() {
+                const isLoggedIn = window.isLoggedIn && window.isLoggedIn();
+                if (isLoggedIn) {
+                    if (signInButton) signInButton.style.display = 'none';
+                    if (!document.getElementById('profileIcon')) {
+                        const userRole = window.getUserRole ? window.getUserRole() : 'Public';
+                        const dashboardUrl = window.getDashboardUrl ? window.getDashboardUrl(userRole) : 'mentee_dashboard.html';
+                        const profileLink = document.createElement('a');
+                        profileLink.href = dashboardUrl;
+                        profileLink.innerHTML = '<i class="bi bi-person-circle user-profile-icon" id="profileIcon" title="Profile"></i>';
+                        profileLink.style.marginLeft = '16px';
+                        mainHeader.appendChild(profileLink);
+                    }
+                } else {
+                    if (signInButton) signInButton.style.display = '';
+                    const existingIcon = document.getElementById('profileIcon');
+                    if (existingIcon && existingIcon.parentNode) {
+                        existingIcon.parentNode.remove();
+                    }
+                }
+            }
+            updateAuthUI();
+            window.addEventListener('storage', updateAuthUI);
+
+            // --- Calorie Calculator specific JavaScript ---
+            const unitImperial = document.getElementById('unitImperial');
+            const unitMetric = document.getElementById('unitMetric');
+            const imperialFields = document.getElementById('imperialFields');
+            const metricFields = document.getElementById('metricFields');
+            const weightInput = document.getElementById('weight');
+            const weightUnit = document.getElementById('weightUnit');
+            const heightFtInput = document.getElementById('heightFt');
+            const heightInInput = document.getElementById('heightIn');
+            const heightCmInput = document.getElementById('heightCm');
+
+            const genderMale = document.getElementById('genderMale');
+            const genderFemale = document.getElementById('genderFemale');
+
+            const calorieForm = document.getElementById('calorieForm');
+            const calorieResultPanel = document.getElementById('calorieResultPanel');
+            const errorMessage = document.getElementById('errorMessage');
+
+            let currentUnit = 'imperial';
+            let currentGender = 'male';
+
+            function setRequiredFields() {
+                if (currentUnit === 'imperial') {
+                    if (heightFtInput) heightFtInput.setAttribute('required', '');
+                    if (heightInInput) heightInInput.setAttribute('required', '');
+                    if (heightCmInput) heightCmInput.removeAttribute('required');
+                } else {
+                    if (heightCmInput) heightCmInput.setAttribute('required', '');
+                    if (heightFtInput) heightFtInput.removeAttribute('required');
+                    if (heightInInput) heightInInput.removeAttribute('required');
+                }
+            }
+
+            function clearResult() {
+                if (calorieResultPanel) calorieResultPanel.style.display = 'none';
+                if (errorMessage) errorMessage.style.display = 'none';
+            }
+
+            function updateUnitToggle(activeBtn, inactiveBtn, imperialDisplay, metricDisplay, weightUnitText, weightPlaceholder, heightFtPlaceholder, heightInPlaceholder, heightCmPlaceholder) {
+                activeBtn.classList.add('active');
+                activeBtn.setAttribute('aria-pressed', 'true');
+                inactiveBtn.classList.remove('active');
+                inactiveBtn.setAttribute('aria-pressed', 'false');
+
+                if (imperialFields) imperialFields.style.display = imperialDisplay;
+                if (metricFields) metricFields.style.display = metricDisplay;
+                if (weightUnit) weightUnit.textContent = weightUnitText;
+                if (weightInput) weightInput.placeholder = weightPlaceholder;
+                if (heightFtInput) heightFtInput.placeholder = heightFtPlaceholder;
+                if (heightInInput) heightInInput.placeholder = heightInPlaceholder;
+                if (heightCmInput) heightCmInput.placeholder = heightCmPlaceholder;
+
+                clearResult();
+                setRequiredFields();
+            }
+
+            if (unitImperial) {
+                unitImperial.onclick = () => {
+                    currentUnit = 'imperial';
+                    updateUnitToggle(unitImperial, unitMetric, 'block', 'none', 'lbs', 'e.g., 150', 'Feet', 'Inches', 'e.g., 175');
+                };
+            }
+
+            if (unitMetric) {
+                unitMetric.onclick = () => {
+                    currentUnit = 'metric';
+                    updateUnitToggle(unitMetric, unitImperial, 'none', 'block', 'kg', 'e.g., 68', 'Feet', 'Inches', 'e.g., 175');
+                };
+            }
+
+            function updateGenderToggle(activeBtn, inactiveBtn, genderValue) {
+                activeBtn.classList.add('active');
+                activeBtn.setAttribute('aria-pressed', 'true');
+                inactiveBtn.classList.remove('active');
+                inactiveBtn.setAttribute('aria-pressed', 'false');
+                currentGender = genderValue;
+                clearResult();
+            }
+
+            if (genderMale) {
+                genderMale.onclick = () => {
+                    updateGenderToggle(genderMale, genderFemale, 'male');
+                };
+            }
+
+            if (genderFemale) {
+                genderFemale.onclick = () => {
+                    updateGenderToggle(genderFemale, genderMale, 'female');
+                };
+            }
+
+            // Initialize on load
+            setRequiredFields();
+            clearResult();
+            if (weightInput) weightInput.placeholder = 'e.g., 150';
+            if (heightFtInput) heightFtInput.placeholder = 'Feet';
+            if (heightInInput) heightInInput.placeholder = 'Inches';
+            if (heightCmInput) heightCmInput.placeholder = 'e.g., 175';
+
+            // Guest ID generation for logging
+            function getOrCreateGuestId() {
+                let guestId = localStorage.getItem('guestId');
+                if (!guestId) {
+                    guestId = 'guest_' + Math.random().toString(36).substr(2, 16) + '_' + Date.now();
+                    localStorage.setItem('guestId', guestId);
+                }
+                return guestId;
+            }
+
+            function isUserLoggedIn() {
+                const token = localStorage.getItem('token');
+                return !!token;
+            }
+
+            // Log calculator usage with proper authentication
+            function saveCalorieLog(inputs, results) {
+                // Use the centralized auth system to get user info with priority checking
+                let userId = null, userRole = 'Guest';
+                
+                // Priority 1: Use AuthManager instance if available
+                if (window.authManager && typeof window.authManager.isAuthenticated === 'function' && window.authManager.isAuthenticated()) {
+                    userId = window.authManager.getUserId();
+                    userRole = window.authManager.getUserRole();
+                }
+                // Priority 2: Use global auth functions
+                else if (window.getUserId && window.getUserRole && window.isLoggedIn && window.isLoggedIn()) {
+                    userId = window.getUserId();
+                    userRole = window.getUserRole();
+                }
+                // Priority 3: Try to parse token directly
+                else if (window.getAuthToken && window.isLoggedIn && window.isLoggedIn()) {
+                    try {
+                        const token = window.getAuthToken();
+                        if (token) {
+                            const payload = JSON.parse(atob(token.split('.')[1]));
+                            userId = payload.id || payload.userId || null;
+                            userRole = payload.role || payload.userRole || 'Guest';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing auth token for calorie log:', e);
+                    }
+                }
+
+                const token = window.getAuthToken ? window.getAuthToken() : null;
+                const sessionId = window.getSessionId ? window.getSessionId() : getOrCreateGuestId();
+
+                console.log('Calorie Calculator - Auth Info:', {
+                    userId,
+                    userRole,
+                    hasToken: !!token,
+                    sessionId,
+                    isAuthenticated: window.authManager ? window.authManager.isAuthenticated() : false
+                });
+
+                let body = {
+                    calculatorType: 'Calorie',
+                    inputs: inputs,
+                    results: results,
+                    timestamp: new Date().toISOString(),
+                    sessionId: sessionId,
+                    userId: userId,
+                    userRole: userRole
+                };
+
+                // Use centralized fetch if available, or fallback
+                const fetchMethod = window.authFetch || fetch;
+                const headers = { 'Content-Type': 'application/json' };
+                
+                if (token) {
+                    headers['Authorization'] = 'Bearer ' + token;
+                    console.log('Adding auth header with token');
+                } else {
+                    console.log('No token available for auth header');
+                }
+
+                // Always use the authenticated endpoint if we have auth info
+                const apiUrl = window.authFetch ? '/api/calculator-logs' : 'http://localhost:5000/api/calculator-logs';
+                
+                console.log('Saving calorie log with:', { apiUrl, headers: { ...headers, 'Authorization': headers['Authorization'] ? 'Bearer [TOKEN]' : 'None' }, body });
+
+                fetchMethod(apiUrl, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(body)
+                }).then(response => {
+                    console.log('Calorie log response status:', response.status);
+                    console.log('Calorie log response headers:', response.headers);
+                    if (response.ok) {
+                        console.log('Calorie calculation logged successfully');
+                        return response.json();
+                    } else {
+                        console.error('Failed to log calorie calculation:', response.status);
+                        return response.json().then(data => {
+                            console.error('Error details:', data);
+                            console.error('Server response for failed log:', data);
+                            throw new Error(data.message || 'Failed to save log');
+                        });
+                    }
+                }).then(data => {
+                    console.log('Log saved successfully with data:', data);
+                    if (data.data && data.data.userId) {
+                        console.log('Log saved with user ID:', data.data.userId);
+                    } else if (data.data && data.data.guestId) {
+                        console.log('Log saved as guest with ID:', data.data.guestId);
+                    }
+                }).catch(err => {
+                    console.error('Error saving calorie log:', err);
+                });
+            }
+
+            if (calorieForm) {
+                calorieForm.onsubmit = function(e) {
+                    e.preventDefault();
+                    clearResult();
+
+                    let age = parseInt(document.getElementById('age').value);
+                    let weight = parseFloat(document.getElementById('weight').value);
+                    let activity = document.getElementById('activity').value;
+                    let goal = document.getElementById('goal').value;
+                    let heightFt = parseFloat(document.getElementById('heightFt')?.value);
+                    let heightIn = parseFloat(document.getElementById('heightIn')?.value);
+                    let heightCm = parseFloat(document.getElementById('heightCm')?.value);
+
+                    // Input validation
+                    if (isNaN(age) || age < 1 || age > 120) {
+                        showError("Please enter a valid age between 1 and 120 years.");
+                        return;
+                    }
+                    if (isNaN(weight) || weight < 1 || weight > 1000) {
+                        showError("Please enter a valid weight.");
+                        return;
+                    }
+                    if (activity === "") {
+                        showError("Please select an activity level.");
+                        return;
+                    }
+                    if (goal === "") {
+                        showError("Please select a goal.");
+                        return;
+                    }
+
+                    let weightKg, heightCmFinal;
+
+                    if (currentUnit === 'imperial') {
+                        if (isNaN(heightFt) || heightFt < 1 || isNaN(heightIn) || heightIn < 0) {
+                            showError("Please enter a valid height.");
+                            return;
+                        }
+                        weightKg = weight * 0.453592;
+                        heightCmFinal = (heightFt * 30.48) + (heightIn * 2.54);
+                    } else {
+                        if (isNaN(heightCm) || heightCm < 50) {
+                            showError("Please enter a valid height in centimeters.");
+                            return;
+                        }
+                        weightKg = weight;
+                        heightCmFinal = heightCm;
+                    }
+
+                    // Mifflin-St Jeor Equation
+                    let bmr = (currentGender === 'male')
+                        ? (10 * weightKg) + (6.25 * heightCmFinal) - (5 * age) + 5
+                        : (10 * weightKg) + (6.25 * heightCmFinal) - (5 * age) - 161;
+
+                    // Activity multiplier (TDEE)
+                    let tdee = bmr;
+                    switch (activity) {
+                        case 'sedentary': tdee *= 1.2; break;
+                        case 'lightly-active': tdee *= 1.375; break;
+                        case 'moderately-active': tdee *= 1.55; break;
+                        case 'very-active': tdee *= 1.725; break;
+                        case 'extra-active': tdee *= 1.9; break;
+                    }
+
+                    // Goal adjustment
+                    if (goal === 'gain') {
+                        tdee += 500;
+                    } else if (goal === 'lose') {
+                        tdee -= 500;
+                    }
+                    tdee = Math.round(tdee);
+
+                    // Macronutrient distribution
+                    let protein = Math.round((tdee * 0.30) / 4);
+                    let carbs = Math.round((tdee * 0.40) / 4);
+                    let fat = Math.round((tdee * 0.30) / 9);
+
+                    // Show result with enhanced features
+                    document.getElementById('calorieValue').textContent = tdee;
+                    document.getElementById('bmrValue').textContent = Math.round(bmr);
+                    document.getElementById('proteinValue').textContent = protein + 'g';
+                    document.getElementById('carbsValue').textContent = carbs + 'g';
+                    document.getElementById('fatValue').textContent = fat + 'g';
+
+                    // Calculate and display calorie range
+                    let calorieMin = Math.round(tdee - 100);
+                    let calorieMax = Math.round(tdee + 100);
+                    document.getElementById('calorieMin').textContent = calorieMin;
+                    document.getElementById('calorieMax').textContent = calorieMax;
+
+                    // Update visual progress bar
+                    setTimeout(() => {
+                        const progressBar = document.getElementById('calorieBar');
+                        const percentage = Math.min((tdee / (bmr * 2)) * 100, 100);
+                        progressBar.style.width = percentage + '%';
+                    }, 100);
+
+                    // Generate health recommendations
+                    generateHealthRecommendations(bmr, tdee, goal, activity, age, currentGender);
+
+                    // Generate quick tips
+                    generateQuickTips(goal, activity, tdee, bmr);
+
+                    calorieResultPanel.style.display = 'flex';
+
+                    // Collect calculation data
+                    let inputs = { age, weight, activity, goal, unit: currentUnit, gender: currentGender };
+                    if (currentUnit === 'imperial') {
+                        inputs.heightFt = heightFt;
+                        inputs.heightIn = heightIn;
+                    } else {
+                        inputs.heightCm = heightCm;
+                    }
+                    let results = {
+                        calories: tdee,
+                        bmr: Math.round(bmr),
+                        protein: protein,
+                        carbs: carbs,
+                        fat: fat
+                    };
+
+                    // Log calorie calculation using enhanced logging with proper auth
+                    if (window.logCalorieCalculation) {
+                        window.logCalorieCalculation(inputs, results);
+                    }
+
+                    // Also use the activity logging system which has better auth detection
+                    if (window.logActivity && typeof window.logActivity === 'function') {
+                        window.logActivity('CALORIE_CALCULATION', {
+                            calories: results.calories,
+                            bmr: results.bmr,
+                            inputs: inputs,
+                            results: results
+                        });
+                    }
+
+                    // Use the AuthManager's logActivity method if available for best auth detection
+                    if (window.authManager && typeof window.authManager.logActivity === 'function') {
+                        window.authManager.logActivity('CALORIE_CALCULATION', {
+                            calories: results.calories,
+                            bmr: results.bmr,
+                            inputs: inputs,
+                            results: results
+                        });
+                    }
+
+                    // Also save calorie log for backward compatibility
+                    saveCalorieLog(inputs, results);
+
+                    // Scroll to result on small screens for better UX
+                    if (window.innerWidth <= 991) {
+                        calorieResultPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                };
+            }
+
+            // Generate health recommendations based on calculations
+            function generateHealthRecommendations(bmr, tdee, goal, activity, age, gender) {
+                const container = document.getElementById('recommendationCards');
+                container.innerHTML = '';
+
+                const recommendations = [];
+
+                // Age-based recommendations
+                if (age < 30) {
+                    recommendations.push({
+                        text: "Build healthy eating habits early. Your metabolism is naturally higher now.",
+                        priority: "low"
+                    });
+                } else if (age > 50) {
+                    recommendations.push({
+                        text: "Focus on strength training to maintain muscle mass and bone density.",
+                        priority: "medium"
+                    });
+                }
+
+                // Goal-based recommendations
+                switch (goal) {
+                    case 'lose':
+                        recommendations.push({
+                            text: "Aim for a gradual weight loss of 1-2 pounds per week for sustainable results.",
+                            priority: "high"
+                        });
+                        recommendations.push({
+                            text: "Include protein in every meal to maintain muscle mass during weight loss.",
+                            priority: "medium"
+                        });
+                        break;
+                    case 'gain':
+                        recommendations.push({
+                            text: "Focus on strength training and consume protein within 30 minutes post-workout.",
+                            priority: "high"
+                        });
+                        recommendations.push({
+                            text: "Eat frequent, nutrient-dense meals to support healthy weight gain.",
+                            priority: "medium"
+                        });
+                        break;
+                    case 'maintain':
+                        recommendations.push({
+                            text: "Maintain your current eating patterns and activity level for weight maintenance.",
+                            priority: "low"
+                        });
+                        break;
+                }
+
+                // Activity-based recommendations
+                if (activity === 'sedentary') {
+                    recommendations.push({
+                        text: "Consider adding light physical activity like walking for 30 minutes daily.",
+                        priority: "high"
+                    });
+                } else if (activity === 'extra-active') {
+                    recommendations.push({
+                        text: "Ensure adequate rest and recovery between intense training sessions.",
+                        priority: "medium"
+                    });
+                }
+
+                // BMR vs TDEE analysis
+                const difference = tdee - bmr;
+                if (difference < 200) {
+                    recommendations.push({
+                        text: "Your activity level is very low. Consider increasing daily movement.",
+                        priority: "high"
+                    });
+                }
+
+                // Display recommendations
+                recommendations.forEach(rec => {
+                    const card = document.createElement('div');
+                    card.className = `recommendation-card priority-${rec.priority}`;
+                    card.textContent = rec.text;
+                    container.appendChild(card);
+                });
+            }
+
+            // Generate quick tips based on user data
+            function generateQuickTips(goal, activity, tdee, bmr) {
+                const container = document.getElementById('tipsList');
+                container.innerHTML = '';
+
+                const tips = [
+                    "Drink at least 8 glasses of water daily to support metabolism.",
+                    "Eat protein with every meal to maintain muscle mass.",
+                    "Include fiber-rich foods to feel full and support digestion.",
+                    "Plan your meals in advance to avoid impulsive food choices.",
+                    "Get 7-9 hours of quality sleep for optimal metabolism."
+                ];
+
+                // Goal-specific tips
+                if (goal === 'lose') {
+                    tips.push("Use smaller plates to help control portion sizes.");
+                    tips.push("Eat slowly and mindfully to recognize hunger cues.");
+                } else if (goal === 'gain') {
+                    tips.push("Add healthy fats like nuts and avocados to increase calories.");
+                    tips.push("Consider post-workout snacks to support muscle growth.");
+                }
+
+                // Activity-specific tips
+                if (activity === 'sedentary') {
+                    tips.push("Take short walking breaks every hour during work.");
+                } else if (activity.includes('active')) {
+                    tips.push("Time your carbohydrate intake around your workouts.");
+                }
+
+                // Display tips
+                tips.slice(0, 6).forEach(tip => {
+                    const item = document.createElement('div');
+                    item.className = 'tip-item';
+                    item.textContent = tip;
+                    container.appendChild(item);
+                });
+            }
+
+            function showError(message) {
+                if (errorMessage) {
+                    errorMessage.textContent = message;
+                    errorMessage.style.display = 'block';
+                }
+                if (calorieResultPanel) {
+                    calorieResultPanel.style.display = 'none';
+                }
+                if (errorMessage) {
+                    errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    </script>
+</body>
+<!-- Universal Footer Component for Healthiet -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+/* Universal Footer Styles */
+.universal-footer { background: linear-gradient(135deg, #126663 0%, #0a4f4c 100%); color: #ffffff; padding: 3rem 0 1.5rem 0; margin-top: auto; position: relative; overflow: hidden; box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1); }
+.universal-footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(13, 201, 194, 0.8), transparent); }
+.universal-footer::after { content: ''; position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(13, 201, 194, 0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+.footer-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+.footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem; margin-bottom: 2rem; }
+.footer-section h3 { color: #0dc9c2; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; position: relative; }
+.footer-section h3::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 30px; height: 2px; background: #0dc9c2; border-radius: 2px; }
+.footer-section h3 i { font-size: 1.1rem; color: #0dc9c2; }
+.footer-section p { line-height: 1.7; margin-bottom: 1rem; opacity: 0.9; color: rgba(255, 255, 255, 0.9); }
+.footer-links { list-style: none; padding: 0; }
+.footer-links li { margin-bottom: 0.5rem; }
+.footer-links a { color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; border-radius: 4px; font-weight: 500; }
+.footer-links a:hover { color: #0dc9c2; transform: translateX(8px); background: rgba(13, 201, 194, 0.1); padding-left: 0.5rem; }
+.footer-links a i { font-size: 0.9rem; width: 18px; color: #0dc9c2; opacity: 0.8; transition: all 0.3s ease; }
+.footer-links a:hover i { opacity: 1; transform: scale(1.1); }
+.social-links { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+.social-link { width: 42px; height: 42px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.2); position: relative; overflow: hidden; }
+.social-link::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0dc9c2; transform: scale(0); transition: transform 0.3s ease; border-radius: 50%; z-index: -1; }
+.social-link:hover::before { transform: scale(1); }
+.social-link:hover { color: #ffffff; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(13, 201, 194, 0.4); border-color: #0dc9c2; }
+.social-link i { font-size: 1.1rem; z-index: 1; }
+.contact-info { list-style: none; padding: 0; }
+.contact-info li { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; color: rgba(255, 255, 255, 0.9); padding: 0.3rem 0; }
+.contact-info i { color: #0dc9c2; width: 20px; text-align: center; font-size: 1rem; }
+.newsletter-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+.newsletter-input { flex: 1; padding: 0.8rem 1rem; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 25px; background: rgba(255, 255, 255, 0.1); color: #ffffff; font-size: 0.9rem; transition: all 0.3s ease; font-family: inherit; }
+.newsletter-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+.newsletter-input:focus { outline: none; border-color: #0dc9c2; background: rgba(255, 255, 255, 0.15); box-shadow: 0 0 0 3px rgba(13, 201, 194, 0.2); }
+.newsletter-btn { padding: 1rem 3rem; background: #0dc9c2; color: #ffffff; border: none; border-radius: 25px; font-weight: 400; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; font-family: inherit; position: relative; overflow: hidden; }
+.newsletter-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s ease; }
+.newsletter-btn:hover::before { left: 100%; }
+.newsletter-btn:hover { background: #0ab6b0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13, 201, 194, 0.4); }
+.footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-copyright { color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+.footer-legal { display: flex; gap: 1.5rem; list-style: none; padding: 0; margin: 0; }
+.footer-legal a { color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; font-weight: 500; }
+.footer-legal a:hover { color: #0dc9c2; }
+.footer-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+.footer-logo { font-size: 1.6rem; font-weight: 800; background: linear-gradient(45deg, #0dc9c2, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
+@media (max-width: 768px) { .universal-footer { padding: 2rem 0 1rem 0; } .footer-container { padding: 0 1rem; } .footer-content { grid-template-columns: 1fr; gap: 2rem; } .footer-bottom { flex-direction: column; text-align: center; gap: 1rem; } .footer-legal { flex-wrap: wrap; justify-content: center; } .newsletter-form { flex-direction: column; gap: 0.75rem; } .social-links { justify-content: center; } } @media (max-width: 480px) { .footer-section h3 { font-size: 1.1rem; } .footer-content { gap: 1.5rem; } .social-link { width: 38px; height: 38px; } } @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .footer-section { animation: fadeInUp 0.6s ease-out; } .footer-section:nth-child(1) { animation-delay: 0.1s; } .footer-section:nth-child(2) { animation-delay: 0.2s; } .footer-section:nth-child(3) { animation-delay: 0.3s; } .footer-section:nth-child(4) { animation-delay: 0.4s; } .dark-mode .universal-footer { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-top: 1px solid rgba(255, 255, 255, 0.1); }
+</style>
+<footer class="universal-footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-brand">
+                    <span class="footer-logo">HEALTHIET</span>
+                </div>
+                <p>Your trusted partner in health and wellness. Empowering individuals to achieve their fitness goals through personalized guidance and cutting-edge technology.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-link" title="Twitter"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-link" title="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-link" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="social-link" title="YouTube"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3><i class="bi bi-link-45deg"></i> Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html"><i class="bi bi-house"></i> Home</a></li>
+                    <li><a href="services.html"><i class="bi bi-gear"></i> Services</a></li>
+                    <li><a href="calorie-hub.html"><i class="bi bi-calculator"></i> Calorie Calculator</a></li>
+                    <li><a href="bmi.html"><i class="bi bi-person-check"></i> BMI Calculator</a></li>
+                    <li><a href="workout.html"><i class="bi bi-activity"></i> Workouts</a></li>
+                    <li><a href="diet.html"><i class="bi bi-heart-pulse"></i> Diet Plans</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3><i class="bi bi-headset"></i> Support</h3>
+                <ul class="footer-links">
+                    <li><a href="Support.html"><i class="bi bi-question-circle"></i> Help Center</a></li>
+                    <li><a href="contact.html"><i class="bi bi-envelope"></i> Contact Us</a></li>
+                    <li><a href="auth.html"><i class="bi bi-person-plus"></i> Create Account</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3><i class="bi bi-envelope-heart"></i> Stay Connected</h3>
+                <ul class="contact-info">
+                    <li><i class="bi bi-geo-alt"></i><span>123 Health Street, Wellness City, WC 12345</span></li>
+                    <li><i class="bi bi-telephone"></i><span>+1 (555) 123-4567</span></li>
+                    <li><i class="bi bi-envelope"></i><span>support@healthiet.com</span></li>
+                </ul>
+                <div class="newsletter">
+                    <p style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 600;">Subscribe to our newsletter:</p>
+                    <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+                        <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+                        <button type="submit" class="newsletter-btn"><i class="bi bi-send"></i> Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; 2024 Healthiet. All rights reserved. Built with ❤️ for your health.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<script>
+function subscribeNewsletter(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('.newsletter-input').value;
+    console.log('Newsletter subscription for:', email);
+    const button = event.target.querySelector('.newsletter-btn');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-check2"></i> Subscribed!';
+    button.style.background = '#28a745';
+    button.disabled = true;
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.background = '#0dc9c2';
+        button.disabled = false;
+        event.target.reset();
+    }, 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const footerLinks = document.querySelectorAll('.footer-links a[href^="#"]');
+    footerLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+});
+</script>
+<!--#include file="components/universal-footer.html" -->
+</html>

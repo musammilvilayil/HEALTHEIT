@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <script src="js/globalAuth.js"></script>
+</head>
+<body>
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+        <input type="text" id="name" name="name" placeholder="Your Name" required /><br />
+        <input type="email" id="email" name="email" placeholder="Your Email" required /><br />
+        <input type="text" id="subject" name="subject" placeholder="Subject" required /><br />
+        <textarea id="message" name="message" placeholder="Your Message" required></textarea><br />
+        <button type="submit">Send</button>
+    </form>
+    <div id="contactMsg"></div>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, subject, message })
+            });
+            const data = await res.json();
+            const msgDiv = document.getElementById('contactMsg');
+            if (data.success) {
+                msgDiv.textContent = data.message;
+                document.getElementById('contactForm').reset();
+            } else {
+                msgDiv.textContent = data.message || 'Submission failed.';
+            }
+        });
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

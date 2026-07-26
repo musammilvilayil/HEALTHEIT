@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Healthiet - Sign In</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+        rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" />
+    <!-- Include centralized auth system -->
+    <script src="js/auth.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Montserrat", sans-serif;
+            background: #126663;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: linear-gradient(to bottom, #126663, #0e4a47);
+        }
+
+        .auth-container {
+            width: 100%;
+            min-height: 110vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding-left: 20%;
+            box-sizing: border-box;
+        }
+
+        .blur-circle {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            width: 643px;
+            height: 633px;
+            background-image: radial-gradient(
+                circle at center,
+                rgba(10, 200, 190, 0.3) 0%,
+                transparent 70%
+            );
+            filter: blur(150px);
+            opacity: 0.7;
+            animation: float 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(-50%, -50%) translateY(0);
+            }
+            100% {
+                transform: translate(-50%, -50%) translateY(15px);
+            }
+        }
+
+        .auth-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            right: -150px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 12px 60px rgba(0, 0, 0, 0.15);
+            animation:
+                fadeIn 1s ease-out,
+                borderPulse 3s infinite alternate;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition:
+                transform 0.5s ease,
+                box-shadow 0.5s ease;
+        }
+
+        .auth-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 16px 70px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes borderPulse {
+            from {
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+            to {
+                border-color: rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-title {
+            color: #fff;
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+            transition: transform 0.3s ease;
+        }
+
+        .auth-title:hover {
+            transform: scale(1.05);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            transition: color 0.3s ease;
+        }
+        .form-label:hover {
+            color: #0dc9c2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #0dc9c2;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: "Montserrat", sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00b894;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .decorative-element-top {
+            width: 400px;
+            height: 400px;
+            position: absolute;
+            right: -200px;
+            top: 100px;
+            flex-shrink: 0;
+            animation: float 8s ease-in-out infinite;
+            transform: scaleY(-1);
+            transition: transform 0.5s ease;
+        }
+        .decorative-element-top:hover {
+            transform: scaleY(-1) scale(1.1);
+        }
+
+        .decorative-element-bottom {
+            position: absolute;
+            width: max-content;
+            height: max-content;
+            padding: 0;
+            bottom: 60px;
+            top: 550px;
+            left: 6%;
+            animation: float 8s ease-in-out infinite alternate;
+            transition: transform 0.5s ease;
+        }
+        .decorative-element-bottom:hover {
+            transform: scale(1.1);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 29px;
+            background: #0dc9c2;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .auth-button:hover {
+            background: #00b894;
+            transform: scale(1.06);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .auth-button:active {
+            background: #00a883;
+            transform: scale(0.98);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            transition:
+                color 0.3s ease,
+                text-shadow 0.3s ease;
+        }
+
+        .auth-link:hover {
+            color: #0dc9c2;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .brand-link {
+            position: absolute;
+            top: 30px;
+            text-align: center;
+            width: 100%;
+            color: #fff;
+            font-size: 3rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 3px;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .brand-link:hover {
+            transform: scale(1.08);
+        }
+
+        @media (max-width: 991px) {
+            .auth-box {
+                max-width: 380px;
+                padding: 30px;
+                margin: 0 20px;
+            }
+
+            .brand-link {
+                font-size: 2.5rem;
+            }
+            .auth-container {
+                padding-left: 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .auth-box {
+                max-width: calc(100% - 40px);
+                padding: 24px;
+                margin: 20px;
+            }
+
+            .brand-link {
+                font-size: 2rem;
+                top: 20px;
+            }
+
+            .auth-title {
+                font-size: 28px;
+                margin-bottom: 25px;
+            }
+
+            .form-input {
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .auth-button {
+                padding: 14px;
+                font-size: 16px;
+            }
+            .auth-container {
+                padding-left: 0;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .auth-box {
+                padding: 20px;
+            }
+
+            .auth-title {
+                font-size: 24px;
+            }
+
+            .brand-link {
+                font-size: 1.8rem;
+            }
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            transition: opacity 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        #decorativeLeft {
+            position: absolute;
+            left: 100px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 550px;
+            height: auto;
+            z-index: 0;
+            transition: transform 0.5s ease;
+        }
+        #decorativeLeft:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .form-container {
+            display: none;
+            animation: formSwitch 0.5s ease-in-out;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+        @keyframes formSwitch {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            background: rgba(18, 102, 99, 0.9);
+            position: relative;
+            z-index: 3;
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #0dc9c2;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .sign-in-btn {
+            background: #0dc9c2;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            transition:
+                background 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .sign-in-btn:hover {
+            background: #00b894;
+            transform: translateY(-2px);
+        }
+
+        .sign-in-btn:active {
+            background: #00a883;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+  
+    <a href="index.html" class="brand-link">HEALTHIET</a>
+    <img
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/a8c04f835448d4d197d0736bad8334dc361dc14b"
+        alt="Decorative top element"
+        class="decorative-element-top"
+        id="decorativeTop"
+    />
+    <main class="auth-container">
+        <div class="blur-circle"></div>
+        <img src="imgs/2.png" alt="Decorative left element" id="decorativeLeft" />
+
+        <div class="auth-box">
+            <h1 class="auth-title">Sign In</h1>
+            <form id="signInForm" class="form-container active">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-input"
+                        required
+                        placeholder="Enter your email"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-input"
+                            required
+                            placeholder="Enter your password"
+                        />
+                        <span class="password-toggle" id="togglePassword">Show</span>
+                    </div>
+                </div>
+                <button type="submit" class="auth-button">Sign In</button>
+                <div class="auth-link-container">
+                    <a href="#" class="auth-link" id="forgotPasswordLink"
+                        >Forgot your password?</a
+                    >
+                    <a href="#" class="auth-link" id="registerLink"
+                        >Don't have an account? Sign up</a
+                    >
+                </div>
+            </form>
+
+            <form id="registerForm" class="form-container">
+                <div class="form-group">
+                    <label for="reg-email" class="form-label">Email</label>
+                    <input
+                        type="email"
+                        id="reg-email"
+                        class="form-input"
+                        required
+                        placeholder="Enter your email"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="reg-password" class="form-label">Password</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="reg-password"
+                            class="form-input"
+                            required
+                            placeholder="Enter your password"
+                        />
+                        <span class="password-toggle reg-password-toggle">Show</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password" class="form-label"
+                        >Confirm Password</label
+                    >
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            class="form-input"
+                            required
+                            placeholder="Confirm your password"
+                        />
+                        <span class="password-toggle confirm-password-toggle">Show</span>
+                    </div>
+                </div>
+                <button type="submit" class="auth-button">Sign Up</button>
+                <div class="auth-link-container">
+                    <a href="#" class="auth-link" id="signInLink"
+                        >Already have an account? Sign In</a
+                    >
+                </div>
+            </form>
+
+            <form id="forgotPasswordForm" class="form-container">
+                <div class="form-group">
+                    <label for="forgot-email" class="form-label">Email</label>
+                    <input
+                        type="email"
+                        id="forgot-email"
+                        class="form-input"
+                        required
+                        placeholder="Enter your email"
+                    />
+                </div>
+                <button type="submit" class="auth-button">Reset Password</button>
+                <div class="auth-link-container">
+                    <a href="#" class="auth-link" id="signInLink2">Back to Sign In</a>
+                </div>
+                <div id="forgotPasswordMessage" style="color:#0dc9c2;text-align:center;margin-top:10px;"></div>
+            </form>
+        </div>
+        <img
+            src="imgs/3.png"
+            alt="Decorative bottom element"
+            class="decorative-element-bottom"
+            id="decorativeBottom"
+            style="bottom: -340px"
+        />
+    </main>
+    <script src="js/clientLogger.js"></script>
+    <script>
+        // Check if user is already authenticated and redirect appropriately
+        document.addEventListener('DOMContentLoaded', function() {
+            // Give time for AuthManager to initialize
+            setTimeout(() => {
+                if (window.authManager && window.authManager.isAuthenticated()) {
+                    console.log('User already authenticated, redirecting to dashboard');
+                    const userRole = window.authManager.getUserRole();
+                    console.log('User role:', userRole);
+                    window.authManager.redirectToDashboard();
+                    return;
+                }
+            }, 500); // Increased timeout to ensure proper initialization
+        });
+
+        const signInForm = document.getElementById("signInForm");
+        const registerForm = document.getElementById("registerForm");
+        const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+        const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+        const registerLink = document.getElementById("registerLink");
+        const signInLink = document.getElementById("signInLink");
+        const signInLink2 = document.getElementById("signInLink2");
+
+        function showForm(formId) {
+            signInForm.classList.remove("active");
+            registerForm.classList.remove("active");
+            forgotPasswordForm.classList.remove("active");
+            document.getElementById(formId).classList.add("active");
+            document.querySelector(".auth-title").textContent =
+                formId === "signInForm"
+                    ? "Sign In"
+                    : formId === "registerForm"
+                    ? "Sign Up"
+                    : "Reset Password";
+        }
+
+        forgotPasswordLink.addEventListener("click", function (e) {
+            e.preventDefault();
+            showForm("forgotPasswordForm");
+        });
+        registerLink.addEventListener("click", function (e) {
+            e.preventDefault();
+            showForm("registerForm");
+        });
+        signInLink.addEventListener("click", function (e) {
+            e.preventDefault();
+            showForm("signInForm");
+        });
+        signInLink2.addEventListener("click", function (e) {
+            e.preventDefault();
+            showForm("signInForm");
+        });
+
+        function showAuthError(message, type = "error") {
+            let errorDiv = document.getElementById("authError");
+            if (!errorDiv) {
+                errorDiv = document.createElement("div");
+                errorDiv.id = "authError";
+                errorDiv.style.margin = "10px 0";
+                errorDiv.style.textAlign = "center";
+                document.querySelector(".auth-box").prepend(errorDiv);
+            }
+            errorDiv.textContent = message;
+            errorDiv.style.color = type === "success" ? "#28a745" : "#ff5252";
+        }
+        function clearAuthError() {
+            const errorDiv = document.getElementById("authError");
+            if (errorDiv) errorDiv.textContent = "";
+        }
+
+        signInForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            clearAuthError();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            if (!email || !password) {
+                showAuthError("Email and password are required.");
+                return;
+            }
+            try {
+                const res = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+                let data;
+                try {
+                    data = await res.json();
+                } catch (jsonErr) {
+                    showAuthError("Server error: Could not parse response.");
+                    return;
+                }
+                if (!res.ok) {
+                    showAuthError(data.message || "Login failed.");
+                    return;
+                }
+                
+                // Use AuthManager to set authentication data properly
+                window.authManager.setAuth(data.token, data.user);
+                
+                if (data.user.role === "Admin") {
+                    window.location.href = "admin_portal.html";
+                } else if (data.user.role === "Mentor") {
+                    window.location.href = "mentor_dashboard.html";
+                } else {
+                    window.location.href = "mentee_dashboard.html";
+                }
+            } catch (err) {
+                showAuthError("Network error. Please try again.");
+            }
+        });
+
+        registerForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            clearAuthError();
+            const email = document.getElementById("reg-email").value.trim();
+            const password = document.getElementById("reg-password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+            if (!email || !password || !confirmPassword) {
+                showAuthError("All fields are required.");
+                return;
+            }
+            if (password.length < 6) {
+                showAuthError("Password must be at least 6 characters.");
+                return;
+            }
+            if (password !== confirmPassword) {
+                showAuthError("Passwords do not match.");
+                return;
+            }
+            try {
+                const res = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    showAuthError(data.message || "Registration failed.");
+                    return;
+                }
+                
+                // Use AuthManager to set authentication data properly
+                window.authManager.setAuth(data.token, data.user);
+                
+                window.location.href = "update_profile.html";
+            } catch (err) {
+                showAuthError("Network error. Please try again.");
+            }
+        });
+
+        forgotPasswordForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            clearAuthError();
+            const email = document.getElementById("forgot-email").value.trim();
+            if (!email) {
+                showAuthError("Please enter your email address.");
+                return;
+            }
+            try {
+                const res = await fetch("/api/auth/request-password-reset", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email }),
+                });
+                const data = await res.json();
+                showAuthError(data.message || "If that email is registered, a reset link will be sent to your inbox.", "success");
+                forgotPasswordForm.reset();
+            } catch (err) {
+                showAuthError("Network error. Could not send reset request. Please try again.");
+            }
+        });
+
+        document.querySelectorAll(".password-toggle").forEach((toggle) => {
+            toggle.addEventListener("click", function () {
+                const input = this.previousElementSibling;
+                const type = input.getAttribute("type") === "password" ? "text" : "password";
+                input.setAttribute("type", type);
+                this.textContent = type === "password" ? "Show" : "Hide";
+            });
+        });
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

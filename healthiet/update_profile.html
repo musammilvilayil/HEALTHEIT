@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile - Healthiet</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Centralized Authentication System -->
+    <script src="js/clientLogger.js"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        :root {
+            --primary-color: #126663;
+            --primary-light: #0dc9c2;
+            --secondary-color: #e74a3b;
+            --dark-color: #333;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .profile-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .profile-header h1 {
+            color: var(--primary-color);
+            margin: 0 0 0.5rem 0;
+            font-size: 2rem;
+        }
+
+        .profile-header .subtitle {
+            color: var(--gray-color);
+            font-size: 1rem;
+        }
+
+        .profile-photo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-photo-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-photo-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 600;
+            border: 4px solid var(--primary-light);
+        }
+
+        .photo-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .photo-upload-btn:hover {
+            background-color: var(--primary-light);
+            transform: scale(1.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-section {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-light);
+        }
+
+        .form-section h3 {
+            color: var(--primary-color);
+            margin: 0 0 1rem 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        #height.form-input, #weight.form-input {
+            width: 4rem;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(13, 201, 194, 0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .input-group .form-input {
+            flex: 4;
+        }
+
+        .input-group .form-select {
+            min-width: 80px;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .checkbox-item:hover {
+            background-color: #f0f8f8;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            accent-color: var(--primary-light);
+        }
+
+        .mentor-fields {
+            display: none;
+        }
+
+        .mentor-fields.active {
+            display: block;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .loading-spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-light);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .profile-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+        .goals-group {
+            margin-left: 10px;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .goals-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .goals-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo">
+            <i class="bi bi-heart-pulse"></i>
+            HEALTHIET
+        </a>
+        <div class="header-actions">
+            <span id="userInfo" style="color: var(--primary-color); font-weight: 500;"></span>
+            <a href="#" id="backToDashboard" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <h1><i class="bi bi-person-gear"></i> Update Profile</h1>
+                <p class="subtitle">Keep your information up to date</p>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <form id="profileForm">
+                <!-- Profile Photo Section -->
+                <div class="profile-photo-section">
+                    <div class="profile-photo-container">
+                        <img id="profilePhoto" class="profile-photo" style="display: none;" alt="Profile Photo">
+                        <div id="profilePhotoPlaceholder" class="profile-photo-placeholder">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <button type="button" class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">
+                            <i class="bi bi-camera"></i>
+                        </button>
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                    </div>
+                    <p style="color: var(--gray-color); font-size: 0.9rem;">Click the camera icon to update your photo</p>
+                </div>
+
+                <div class="form-grid">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h3><i class="bi bi-person-badge"></i> Personal Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-input" readonly style="background-color: #f8f9fa;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="age">Age *</label>
+                            <input type="number" id="age" name="age" class="form-input" min="10" max="100" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Gender *</label>
+                            <select id="gender" name="gender" class="form-select" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Physical Information -->
+                    <div class="form-section">
+                        <h3><i class="bi bi-activity"></i> Physical Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="height">Height *</label>
+                            <div class="input-group">
+                                <input type="number" id="height" name="height" class="form-input" placeholder="e.g., 175" required>
+                                <select id="heightUnit" name="heightUnit" class="form-select">
+                                    <option value="cm">cm</option>
+                                    <option value="ft">ft</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight">Weight *</label>
+                            <div class="input-group">
+                                <input type="number" id="weight" name="weight" class="form-input" placeholder="e.g., 70" required>
+                                <select id="weightUnit" name="weightUnit" class="form-select">
+                                    <option value="kg">kg</option>
+                                    <option value="lbs">lbs</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="activityLevel">Activity Level</label>
+                            <select id="activityLevel" name="activityLevel" class="form-select">
+                                <option value="">Select Activity Level</option>
+                                <option value="Sedentary">Sedentary (little to no exercise)</option>
+                                <option value="Lightly Active">Lightly Active (light exercise 1-3 days/week)</option>
+                                <option value="Moderately Active">Moderately Active (moderate exercise 3-5 days/week)</option>
+                                <option value="Very Active">Very Active (hard exercise 6-7 days/week)</option>
+                                <option value="Extremely Active">Extremely Active (very hard exercise, physical job)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Health Goals -->
+                    <div class="form-section">
+                        <h3><i class="bi bi-bullseye"></i> Health Goals</h3>
+                        
+                        <div class="form-group">
+                            <label>Primary Goals (select all that apply)</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal1" name="goals" value="Weight Loss">
+                                    <label for="goal1">Weight Loss</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal2" name="goals" value="Weight Gain">
+                                    <label for="goal2">Weight Gain</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal3" name="goals" value="Muscle Gain">
+                                    <label for="goal3">Muscle Gain</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal4" name="goals" value="Muscle Toning">
+                                    <label for="goal4">Muscle Toning</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal5" name="goals" value="Improve Nutrition">
+                                    <label for="goal5">Improve Nutrition</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal6" name="goals" value="Increase Flexibility">
+                                    <label for="goal6">Increase Flexibility</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal7" name="goals" value="Build Endurance">
+                                    <label for="goal7">Build Endurance</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal8" name="goals" value="Stress Management">
+                                    <label for="goal8">Stress Management</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal9" name="goals" value="Better Sleep">
+                                    <label for="goal9">Better Sleep</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="goal10" name="goals" value="General Wellness">
+                                    <label for="goal10">General Wellness</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="healthConditions">Health Conditions or Allergies</label>
+                            <textarea id="healthConditions" name="healthConditions" class="form-textarea" placeholder="Please list any health conditions, allergies, or dietary restrictions..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fitnessExperience">Fitness Experience</label>
+                            <select id="fitnessExperience" name="fitnessExperience" class="form-select">
+                                <option value="">Select Experience Level</option>
+                                <option value="Beginner">Beginner (0-1 years)</option>
+                                <option value="Intermediate">Intermediate (1-3 years)</option>
+                                <option value="Advanced">Advanced (3+ years)</option>
+                                <option value="Expert">Expert/Professional</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Mentor-specific fields -->
+                    <div class="form-section mentor-fields" id="mentorFields">
+                        <h3><i class="bi bi-award"></i> Mentor Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="specialty">Specialty Areas</label>
+                            <input type="text" id="specialty" name="specialty" class="form-input" placeholder="e.g., Nutrition, Fitness Training, Weight Management">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bio">Professional Bio</label>
+                            <textarea id="bio" name="bio" class="form-textarea" placeholder="Tell potential mentees about your background, experience, and approach..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="certifications">Certifications & Qualifications</label>
+                            <textarea id="certifications" name="certifications" class="form-textarea" placeholder="List your relevant certifications, degrees, and professional qualifications..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="experience">Years of Experience</label>
+                            <select id="experience" name="experience" class="form-select">
+                                <option value="">Select Experience</option>
+                                <option value="0-1">0-1 years</option>
+                                <option value="2-5">2-5 years</option>
+                                <option value="6-10">6-10 years</option>
+                                <option value="11-15">11-15 years</option>
+                                <option value="16+">16+ years</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Contact & Preferences -->
+                    <div class="form-section">
+                        <h3><i class="bi bi-gear"></i> Preferences</h3>
+                        
+                        <div class="form-group">
+                            <label for="timezone">Timezone</label>
+                            <select id="timezone" name="timezone" class="form-select">
+                                <option value="">Select Timezone</option>
+                                <option value="UTC-12">UTC-12:00 Baker Island</option>
+                                <option value="UTC-11">UTC-11:00 Niue</option>
+                                <option value="UTC-10">UTC-10:00 Hawaii</option>
+                                <option value="UTC-9">UTC-09:00 Alaska</option>
+                                <option value="UTC-8">UTC-08:00 Pacific Time</option>
+                                <option value="UTC-7">UTC-07:00 Mountain Time</option>
+                                <option value="UTC-6">UTC-06:00 Central Time</option>
+                                <option value="UTC-5">UTC-05:00 Eastern Time</option>
+                                <option value="UTC-4">UTC-04:00 Atlantic Time</option>
+                                <option value="UTC-3">UTC-03:00 Argentina</option>
+                                <option value="UTC-2">UTC-02:00 South Georgia</option>
+                                <option value="UTC-1">UTC-01:00 Azores</option>
+                                <option value="UTC+0">UTC+00:00 GMT/London</option>
+                                <option value="UTC+1">UTC+01:00 Central Europe</option>
+                                <option value="UTC+2">UTC+02:00 Eastern Europe</option>
+                                <option value="UTC+3">UTC+03:00 Moscow</option>
+                                <option value="UTC+4">UTC+04:00 Gulf</option>
+                                <option value="UTC+5">UTC+05:00 Pakistan</option>
+                                <option value="UTC+5:30">UTC+05:30 India</option>
+                                <option value="UTC+6">UTC+06:00 Bangladesh</option>
+                                <option value="UTC+7">UTC+07:00 Thailand</option>
+                                <option value="UTC+8">UTC+08:00 China</option>
+                                <option value="UTC+9">UTC+09:00 Japan</option>
+                                <option value="UTC+10">UTC+10:00 Australia East</option>
+                                <option value="UTC+11">UTC+11:00 Solomon Islands</option>
+                                <option value="UTC+12">UTC+12:00 New Zealand</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="language">Preferred Language</label>
+                            <select id="language" name="language" class="form-select">
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Portuguese">Portuguese</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="Korean">Korean</option>
+                                <option value="Arabic">Arabic</option>
+                                <option value="Hindi">Hindi</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Notifications</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="emailProgress" name="notifications" value="progress_updates">
+                                    <label for="emailProgress">Progress Updates</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="emailMessages" name="notifications" value="new_messages">
+                                    <label for="emailMessages">New Messages</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="emailTips" name="notifications" value="health_tips">
+                                    <label for="emailTips">Health Tips</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="emailNewsletter" name="notifications" value="newsletter">
+                                    <label for="emailNewsletter">Newsletter</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" id="cancelBtn" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </button>
+                    <button type="submit" id="saveBtn" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Save Profile
+                        <span class="loading-spinner"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAuth();
+            initializeForm();
+            loadUserProfile();
+        });
+
+        function initializeAuth() {
+            // Check authentication
+            if (!window.authManager) {
+                console.error('AuthManager not available');
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            if (!window.authManager.isAuthenticated()) {
+                console.log('User not authenticated, redirecting to login');
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            // Update UI with user info
+            const user = window.authManager.getUser();
+            const userInfo = document.getElementById('userInfo');
+            if (user && userInfo) {
+                const displayName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
+                userInfo.textContent = `Welcome, ${displayName}`;
+            }
+
+            // Set up back to dashboard button
+            const backBtn = document.getElementById('backToDashboard');
+            if (backBtn) {
+                backBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.authManager.redirectToDashboard();
+                });
+            }
+
+            // Show mentor fields if user is a mentor
+            const userRole = window.authManager.getUserRole();
+            if (userRole === 'Mentor') {
+                document.getElementById('mentorFields').classList.add('active');
+            }
+        }
+
+        function initializeForm() {
+            const form = document.getElementById('profileForm');
+            const photoInput = document.getElementById('photoInput');
+            const profilePhoto = document.getElementById('profilePhoto');
+            const profilePhotoPlaceholder = document.getElementById('profilePhotoPlaceholder');
+            const cancelBtn = document.getElementById('cancelBtn');
+
+            // Photo upload handling
+            photoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        showMessage('Photo size must be less than 5MB', 'error');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profilePhoto.src = e.target.result;
+                        profilePhoto.style.display = 'block';
+                        profilePhotoPlaceholder.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Cancel button
+            cancelBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to discard your changes?')) {
+                    window.authManager.redirectToDashboard();
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProfile();
+            });
+        }
+
+        async function loadUserProfile() {
+            try {
+                showMessage('Loading profile...', 'info');
+                
+                const response = await window.authManager.apiRequest('/api/auth/profile');
+                const data = await response.json();
+
+                if (response.ok && data.user) {
+                    populateForm(data.user);
+                    hideMessage();
+                } else {
+                    showMessage(data.message || 'Failed to load profile', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showMessage('Network error while loading profile', 'error');
+            }
+        }
+
+        function populateForm(user) {
+            // Basic information
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('firstName').value = user.firstName || '';
+            document.getElementById('lastName').value = user.lastName || '';
+            document.getElementById('age').value = user.age || '';
+            document.getElementById('gender').value = user.gender || '';
+            document.getElementById('height').value = user.height || '';
+            document.getElementById('weight').value = user.weight || '';
+            document.getElementById('activityLevel').value = user.activityLevel || '';
+            document.getElementById('healthConditions').value = user.healthConditions || '';
+            document.getElementById('fitnessExperience').value = user.fitnessExperience || '';
+            document.getElementById('timezone').value = user.timezone || '';
+            document.getElementById('language').value = user.language || 'English';
+
+            // Goals (checkboxes)
+            if (user.goals && Array.isArray(user.goals)) {
+                user.goals.forEach(goal => {
+                    const checkbox = document.querySelector(`input[name="goals"][value="${goal}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+
+            // Notifications (checkboxes)
+            if (user.notifications && Array.isArray(user.notifications)) {
+                user.notifications.forEach(notification => {
+                    const checkbox = document.querySelector(`input[name="notifications"][value="${notification}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }
+
+            // Mentor-specific fields
+            if (window.authManager.getUserRole() === 'Mentor') {
+                document.getElementById('specialty').value = Array.isArray(user.specialty) ? user.specialty.join(', ') : (user.specialty || '');
+                document.getElementById('bio').value = user.bio || '';
+                document.getElementById('certifications').value = user.certifications || '';
+                document.getElementById('experience').value = user.experience || '';
+            }
+
+            // Profile photo
+            if (user.profilePhotoUrl) {
+                const profilePhoto = document.getElementById('profilePhoto');
+                const profilePhotoPlaceholder = document.getElementById('profilePhotoPlaceholder');
+                profilePhoto.src = user.profilePhotoUrl;
+                profilePhoto.style.display = 'block';
+                profilePhotoPlaceholder.style.display = 'none';
+            } else {
+                // Set initials in placeholder
+                const initials = getInitials(user.firstName, user.lastName, user.email);
+                document.getElementById('profilePhotoPlaceholder').innerHTML = `<i class="bi bi-person"></i>`;
+                if (initials) {
+                    document.getElementById('profilePhotoPlaceholder').textContent = initials;
+                }
+            }
+        }
+
+        function getInitials(firstName, lastName, email) {
+            if (firstName && lastName) {
+                return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+            } else if (firstName) {
+                return firstName.charAt(0).toUpperCase();
+            } else if (email) {
+                return email.charAt(0).toUpperCase();
+            }
+            return '';
+        }
+
+        async function saveProfile() {
+            const saveBtn = document.getElementById('saveBtn');
+            const spinner = document.querySelector('.loading-spinner');
+            
+            try {
+                // Disable button and show spinner
+                saveBtn.disabled = true;
+                spinner.style.display = 'inline-block';
+                
+                // Collect form data
+                const formData = new FormData(document.getElementById('profileForm'));
+                
+                // Convert FormData to regular object
+                const profileData = {};
+                
+                // Basic fields
+                profileData.firstName = formData.get('firstName');
+                profileData.lastName = formData.get('lastName');
+                profileData.age = parseInt(formData.get('age'));
+                profileData.gender = formData.get('gender');
+                profileData.height = parseInt(formData.get('height'));
+                profileData.weight = parseInt(formData.get('weight'));
+                profileData.activityLevel = formData.get('activityLevel');
+                profileData.healthConditions = formData.get('healthConditions');
+                profileData.fitnessExperience = formData.get('fitnessExperience');
+                profileData.timezone = formData.get('timezone');
+                profileData.language = formData.get('language');
+
+                // Goals (collect checked values)
+                const goals = [];
+                document.querySelectorAll('input[name="goals"]:checked').forEach(checkbox => {
+                    goals.push(checkbox.value);
+                });
+                profileData.goals = goals;
+
+                // Notifications (collect checked values)
+                const notifications = [];
+                document.querySelectorAll('input[name="notifications"]:checked').forEach(checkbox => {
+                    notifications.push(checkbox.value);
+                });
+                profileData.notifications = notifications;
+
+                // Mentor-specific fields
+                if (window.authManager.getUserRole() === 'Mentor') {
+                    const specialtyText = formData.get('specialty');
+                    profileData.specialty = specialtyText ? specialtyText.split(',').map(s => s.trim()).filter(s => s) : [];
+                    profileData.bio = formData.get('bio');
+                    profileData.certifications = formData.get('certifications');
+                    profileData.experience = formData.get('experience');
+                }
+
+                // Update profile
+                const response = await window.authManager.apiRequest('/api/auth/profile', {
+                    method: 'PUT',
+                    body: JSON.stringify(profileData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Handle photo upload if present
+                    const photoFile = document.getElementById('photoInput').files[0];
+                    if (photoFile) {
+                        await uploadProfilePhoto(photoFile);
+                    }
+
+                    // Update the user data in AuthManager
+                    const currentUser = window.authManager.getUser();
+                    const updatedUser = { ...currentUser, ...data.user };
+                    window.authManager.setAuth(window.authManager.getToken(), updatedUser);
+
+                    showMessage('Profile updated successfully!', 'success');
+                    
+                    // Redirect after short delay
+                    setTimeout(() => {
+                        window.authManager.redirectToDashboard();
+                    }, 2000);
+                } else {
+                    showMessage(data.message || 'Failed to update profile', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showMessage('Network error while saving profile', 'error');
+            } finally {
+                // Re-enable button and hide spinner
+                saveBtn.disabled = false;
+                spinner.style.display = 'none';
+            }
+        }
+
+        async function uploadProfilePhoto(file) {
+            try {
+                const formData = new FormData();
+                formData.append('profilePhoto', file);
+
+                const response = await window.authManager.apiRequest('/api/auth/profile/photo', {
+                    method: 'POST',
+                    body: formData,
+                    // Don't set Content-Type header, let browser set it for FormData
+                    headers: {}
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Failed to upload photo');
+                }
+            } catch (error) {
+                console.error('Error uploading photo:', error);
+                showMessage('Profile saved but photo upload failed', 'error');
+            }
+        }
+
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+        }
+
+        function hideMessage() {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'none';
+        }
+    </script>
+</body>
+<!-- Universal Footer Component for Healthiet -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+/* Universal Footer Styles */
+.universal-footer { background: linear-gradient(135deg, #126663 0%, #0a4f4c 100%); color: #ffffff; padding: 3rem 0 1.5rem 0; margin-top: auto; position: relative; overflow: hidden; box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1); }
+.universal-footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(13, 201, 194, 0.8), transparent); }
+.universal-footer::after { content: ''; position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(13, 201, 194, 0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+.footer-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+.footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem; margin-bottom: 2rem; }
+.footer-section h3 { color: #0dc9c2; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; position: relative; }
+.footer-section h3::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 30px; height: 2px; background: #0dc9c2; border-radius: 2px; }
+.footer-section h3 i { font-size: 1.1rem; color: #0dc9c2; }
+.footer-section p { line-height: 1.7; margin-bottom: 1rem; opacity: 0.9; color: rgba(255, 255, 255, 0.9); }
+.footer-links { list-style: none; padding: 0; }
+.footer-links li { margin-bottom: 0.5rem; }
+.footer-links a { color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; border-radius: 4px; font-weight: 500; }
+.footer-links a:hover { color: #0dc9c2; transform: translateX(8px); background: rgba(13, 201, 194, 0.1); padding-left: 0.5rem; }
+.footer-links a i { font-size: 0.9rem; width: 18px; color: #0dc9c2; opacity: 0.8; transition: all 0.3s ease; }
+.footer-links a:hover i { opacity: 1; transform: scale(1.1); }
+.social-links { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+.social-link { width: 42px; height: 42px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.2); position: relative; overflow: hidden; }
+.social-link::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0dc9c2; transform: scale(0); transition: transform 0.3s ease; border-radius: 50%; z-index: -1; }
+.social-link:hover::before { transform: scale(1); }
+.social-link:hover { color: #ffffff; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(13, 201, 194, 0.4); border-color: #0dc9c2; }
+.social-link i { font-size: 1.1rem; z-index: 1; }
+.contact-info { list-style: none; padding: 0; }
+.contact-info li { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; color: rgba(255, 255, 255, 0.9); padding: 0.3rem 0; }
+.contact-info i { color: #0dc9c2; width: 20px; text-align: center; font-size: 1rem; }
+.newsletter-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+.newsletter-input { flex: 1; padding: 0.8rem 1rem; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 25px; background: rgba(255, 255, 255, 0.1); color: #ffffff; font-size: 0.9rem; transition: all 0.3s ease; font-family: inherit; }
+.newsletter-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+.newsletter-input:focus { outline: none; border-color: #0dc9c2; background: rgba(255, 255, 255, 0.15); box-shadow: 0 0 0 3px rgba(13, 201, 194, 0.2); }
+.newsletter-btn { padding: 1rem 3rem; background: #0dc9c2; color: #ffffff; border: none; border-radius: 25px; font-weight: 400; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; font-family: inherit; position: relative; overflow: hidden; }
+.newsletter-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s ease; }
+.newsletter-btn:hover::before { left: 100%; }
+.newsletter-btn:hover { background: #0ab6b0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13, 201, 194, 0.4); }
+.footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-copyright { color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+.footer-legal { display: flex; gap: 1.5rem; list-style: none; padding: 0; margin: 0; }
+.footer-legal a { color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; font-weight: 500; }
+.footer-legal a:hover { color: #0dc9c2; }
+.footer-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+.footer-logo { font-size: 1.6rem; font-weight: 800; background: linear-gradient(45deg, #0dc9c2, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
+@media (max-width: 768px) { .universal-footer { padding: 2rem 0 1rem 0; } .footer-container { padding: 0 1rem; } .footer-content { grid-template-columns: 1fr; gap: 2rem; } .footer-bottom { flex-direction: column; text-align: center; gap: 1rem; } .footer-legal { flex-wrap: wrap; justify-content: center; } .newsletter-form { flex-direction: column; gap: 0.75rem; } .social-links { justify-content: center; } } @media (max-width: 480px) { .footer-section h3 { font-size: 1.1rem; } .footer-content { gap: 1.5rem; } .social-link { width: 38px; height: 38px; } } @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .footer-section { animation: fadeInUp 0.6s ease-out; } .footer-section:nth-child(1) { animation-delay: 0.1s; } .footer-section:nth-child(2) { animation-delay: 0.2s; } .footer-section:nth-child(3) { animation-delay: 0.3s; } .footer-section:nth-child(4) { animation-delay: 0.4s; } .dark-mode .universal-footer { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-top: 1px solid rgba(255, 255, 255, 0.1); }
+</style>
+<footer class="universal-footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-brand">
+                    <span class="footer-logo">HEALTHIET</span>
+                </div>
+                <p>Your trusted partner in health and wellness. Empowering individuals to achieve their fitness goals through personalized guidance and cutting-edge technology.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" title="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-link" title="Twitter"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-link" title="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-link" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="social-link" title="YouTube"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3><i class="bi bi-link-45deg"></i> Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html"><i class="bi bi-house"></i> Home</a></li>
+                    <li><a href="services.html"><i class="bi bi-gear"></i> Services</a></li>
+                    <li><a href="calorie-hub.html"><i class="bi bi-calculator"></i> Calorie Calculator</a></li>
+                    <li><a href="bmi.html"><i class="bi bi-person-check"></i> BMI Calculator</a></li>
+                    <li><a href="workout.html"><i class="bi bi-activity"></i> Workouts</a></li>
+                    <li><a href="diet.html"><i class="bi bi-heart-pulse"></i> Diet Plans</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3><i class="bi bi-headset"></i> Support</h3>
+                <ul class="footer-links">
+                    <li><a href="Support.html"><i class="bi bi-question-circle"></i> Help Center</a></li>
+                    <li><a href="contact.html"><i class="bi bi-envelope"></i> Contact Us</a></li>
+                    <li><a href="auth.html"><i class="bi bi-person-plus"></i> Create Account</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3><i class="bi bi-envelope-heart"></i> Stay Connected</h3>
+                <ul class="contact-info">
+                    <li><i class="bi bi-geo-alt"></i><span>123 Health Street, Wellness City, WC 12345</span></li>
+                    <li><i class="bi bi-telephone"></i><span>+1 (555) 123-4567</span></li>
+                    <li><i class="bi bi-envelope"></i><span>support@healthiet.com</span></li>
+                </ul>
+                <div class="newsletter">
+                    <p style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 600;">Subscribe to our newsletter:</p>
+                    <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+                        <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+                        <button type="submit" class="newsletter-btn"><i class="bi bi-send"></i> Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; 2024 Healthiet. All rights reserved. Built with ❤️ for your health.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<script>
+function subscribeNewsletter(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('.newsletter-input').value;
+    console.log('Newsletter subscription for:', email);
+    const button = event.target.querySelector('.newsletter-btn');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-check2"></i> Subscribed!';
+    button.style.background = '#28a745';
+    button.disabled = true;
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.background = '#0dc9c2';
+        button.disabled = false;
+        event.target.reset();
+    }, 3000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const footerLinks = document.querySelectorAll('.footer-links a[href^="#"]');
+    footerLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+});
+</script>
+<!--#include file="components/universal-footer.html" -->
+<!--#include file="components/universal-footer.html" -->
+</html>

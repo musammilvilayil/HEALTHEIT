@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Page - Healthiet</title>
+    
+    <!-- Include centralized auth setup -->
+    <script src="js/clientLogger.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/init.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .auth-demo {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation will be automatically inserted here -->
+    
+    <div class="container">
+        <h1>Centralized Authentication Demo</h1>
+        
+        <div class="auth-demo">
+            <h3>Authentication Status</h3>
+            
+            <!-- Content shown when logged out -->
+            <div data-auth="logged-out">
+                <p>You are currently <strong>not logged in</strong>.</p>
+                <a href="auth.html">Sign in to access more features</a>
+            </div>
+            
+            <!-- Content shown when logged in -->
+            <div data-auth="logged-in">
+                <p>Welcome back, <span data-user-name>User</span>!</p>
+                <p>Your role: <span data-user-role>Role</span></p>
+                <p>Email: <span data-user-email>email@example.com</span></p>
+                <button data-action="logout">Logout</button>
+            </div>
+        </div>
+        
+        <div class="auth-demo">
+            <h3>Role-based Content</h3>
+            
+            <!-- Content only for Mentees -->
+            <div data-role="Mentee">
+                <p>🎯 This content is only visible to <strong>Mentees</strong></p>
+                <a href="mentee_dashboard.html">Go to your dashboard</a>
+            </div>
+            
+            <!-- Content only for Mentors -->
+            <div data-role="Mentor">
+                <p>👨‍⚕️ This content is only visible to <strong>Mentors</strong></p>
+                <a href="mentor_dashboard.html">Go to your dashboard</a>
+            </div>
+            
+            <!-- Content only for Admins -->
+            <div data-role="Admin">
+                <p>⚙️ This content is only visible to <strong>Admins</strong></p>
+                <a href="admin_portal.html">Go to admin portal</a>
+            </div>
+        </div>
+        
+        <div class="auth-demo">
+            <h3>API Demo</h3>
+            <button onclick="testAPI()">Test Authenticated API Call</button>
+            <div id="apiResult"></div>
+        </div>
+    </div>
+
+    <script>
+        // Example of making authenticated API calls
+        async function testAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.innerHTML = 'Loading...';
+            
+            try {
+                const response = await window.authManager.apiRequest('/api/auth/profile');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">Error: ${data.message}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Network error: ${error.message}</p>`;
+            }
+        }
+        
+        // Example of logging custom activity
+        function logCustomActivity() {
+            if (window.authManager) {
+                window.authManager.logActivity('PAGE_INTERACTION', {
+                    action: 'button_click',
+                    element: 'demo_button'
+                });
+            }
+        }
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

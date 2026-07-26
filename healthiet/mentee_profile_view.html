@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentee Profile View - Healthiet</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .profile-section, .progress-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .profile-info p strong {
+            color: #555;
+            display: inline-block;
+            width: 150px;
+        }
+        .progress-logs-list {
+            list-style: none;
+            padding: 0;
+        }
+        .progress-logs-list li {
+            background-color: #fff;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .progress-logs-list li span {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .progress-logs-list li strong {
+            color: #333;
+        }
+        .loading-status, .error-message {
+            text-align: center;
+            font-size: 1.1em;
+            padding: 20px;
+        }
+        .error-message {
+            color: red;
+        }
+        #noProgressHistoryMessage {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="plans.html">Plans</a>
+            <a href="diet.html">Diet</a>
+            <a href="services.html">Services</a>
+            <a href="Support.html">Support</a>
+            <div id="profileIconContainer"></div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1 id="menteeNameHeader"></h1>
+        <p id="loadingStatus" class="loading-status">Loading mentee details...</p>
+        <p id="errorStatus" class="error-message" style="display: none;"></p>
+
+        <section class="profile-section" id="menteeProfileSection" style="display: none;">
+            <h2>Profile Details</h2>
+            <div class="profile-info">
+                <p><strong>Email:</strong> <span id="menteeEmail"></span></p>
+                <p><strong>Age:</strong> <span id="menteeAge"></span></p>
+                <p><strong>Gender:</strong> <span id="menteeGender"></span></p>
+                <p><strong>Height:</strong> <span id="menteeHeight"></span> cm</p>
+                <p><strong>Weight:</strong> <span id="menteeWeight"></span> kg</p>
+                <p><strong>Goals:</strong> <span id="menteeGoals"></span></p>
+            </div>
+        </section>
+
+        <section class="progress-section" id="menteeProgressHistorySection" style="display: none;">
+            <h2>Progress History</h2>
+            <p id="noProgressHistoryMessage">No progress logged yet for this mentee.</p>
+            <ul id="progressLogsList" class="progress-logs-list"></ul>
+        </section>
+    </div>
+
+    <script src="js/globalAuth.js"></script> 
+    <script>
+        document.addEventListener('DOMContentLoaded', initializeMenteeProfileView);
+
+        const loadingStatus = document.getElementById('loadingStatus');
+        const errorStatus = document.getElementById('errorStatus');
+        const menteeProfileSection = document.getElementById('menteeProfileSection');
+        const menteeProgressHistorySection = document.getElementById('menteeProgressHistorySection');
+        const menteeNameHeader = document.getElementById('menteeNameHeader');
+        const progressLogsList = document.getElementById('progressLogsList');
+        const noProgressHistoryMessage = document.getElementById('noProgressHistoryMessage');
+
+        function getAuthData() {
+            const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+            const userRole = localStorage.getItem('userRole') || 'Public';
+            return { token, userRole };
+        }
+
+        function displayMessage(divElement, message, type = 'error') {
+            divElement.textContent = message;
+            divElement.className = `message-div ${type}`;
+            divElement.style.display = 'block';
+        }
+
+        function clearMessage(divElement) {
+            divElement.textContent = '';
+            divElement.style.display = 'none';
+        }
+
+        async function initializeMenteeProfileView() {
+            const { token, userRole } = getAuthData();
+            const urlParams = new URLSearchParams(window.location.search);
+            const menteeId = urlParams.get('id');
+
+            if (!token || (userRole !== 'Mentor' && userRole !== 'Admin')) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            if (!menteeId) {
+                displayMessage(errorStatus, 'No mentee ID provided in URL.', 'error');
+                loadingStatus.style.display = 'none';
+                return;
+            }
+
+            loadingStatus.style.display = 'block';
+            clearMessage(errorStatus);
+            menteeProfileSection.style.display = 'none';
+            menteeProgressHistorySection.style.display = 'none';
+
+            try {
+                // Fetch Mentee Profile Details
+                const profileRes = await fetch(`/api/users/${menteeId}`, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const profileData = await profileRes.json();
+
+                if (profileRes.ok && profileData.success && profileData.data) {
+                    const mentee = profileData.data;
+                    menteeNameHeader.textContent = `${mentee.firstName || ''} ${mentee.lastName || ''}'s Profile`;
+                    document.getElementById('menteeEmail').textContent = mentee.email || 'N/A';
+                    document.getElementById('menteeAge').textContent = mentee.age || 'N/A';
+                    document.getElementById('menteeGender').textContent = mentee.gender || 'N/A';
+                    document.getElementById('menteeHeight').textContent = mentee.height ? mentee.height.toFixed(1) : 'N/A';
+                    document.getElementById('menteeWeight').textContent = mentee.weight ? mentee.weight.toFixed(1) : 'N/A';
+                    document.getElementById('menteeGoals').textContent = mentee.goals && mentee.goals.length > 0 ? mentee.goals.join(', ') : 'N/A';
+
+                    menteeProfileSection.style.display = 'block';
+                } else {
+                    displayMessage(errorStatus, profileData.message || 'Failed to load mentee profile.', 'error');
+                    loadingStatus.style.display = 'none';
+                    return;
+                }
+
+                // Fetch Mentee Progress Logs
+                const progressRes = await fetch(`/api/progress/${menteeId}`, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const progressData = await progressRes.json();
+
+                if (progressRes.ok && progressData.success) {
+                    if (progressData.data.length === 0) {
+                        noProgressHistoryMessage.style.display = 'block';
+                    } else {
+                        noProgressHistoryMessage.style.display = 'none';
+                        renderProgressLogs(progressData.data);
+                    }
+                    menteeProgressHistorySection.style.display = 'block';
+                } else {
+                    displayMessage(errorStatus, progressData.message || 'Failed to load progress history.', 'error');
+                }
+
+            } catch (err) {
+                displayMessage(errorStatus, 'Network error. Could not load mentee details.', 'error');
+            } finally {
+                loadingStatus.style.display = 'none';
+            }
+        }
+
+        function renderProgressLogs(logs) {
+            progressLogsList.innerHTML = '';
+            logs.forEach(log => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span><strong>Date:</strong> ${new Date(log.date).toLocaleDateString()}</span>
+                    <span><strong>Weight:</strong> ${log.weightRecorded} kg</span>
+                    <span><strong>Measurements:</strong> ${log.measurements ? JSON.stringify(log.measurements) : 'N/A'}</span>
+                    <span><strong>Workout:</strong> ${log.workoutLog || 'N/A'}</span>
+                    <span><strong>Notes:</strong> ${log.notes || 'N/A'}</span>
+                `;
+                progressLogsList.appendChild(li);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+          const mainHeader = document.getElementById("mainHeader") || document.getElementById("header") || document.querySelector("header");
+          const signInButton = document.getElementById("signInButton");
+          function updateAuthUI() {
+            const isLoggedIn = window.isLoggedIn && window.isLoggedIn();
+            if (isLoggedIn) {
+              if (signInButton) signInButton.style.display = 'none';
+              if (!document.getElementById('profileIcon')) {
+                const userRole = window.getUserRole ? window.getUserRole() : 'Public';
+                const dashboardUrl = window.getDashboardUrl ? window.getDashboardUrl(userRole) : 'mentee_dashboard.html';
+                const profileLink = document.createElement('a');
+                profileLink.href = dashboardUrl;
+                profileLink.innerHTML = '<i class="bi bi-person-circle user-profile-icon" id="profileIcon" title="Profile"></i>';
+                profileLink.style.marginLeft = '16px';
+                if (mainHeader) mainHeader.appendChild(profileLink);
+              }
+            } else {
+              if (signInButton) signInButton.style.display = '';
+              const existingIcon = document.getElementById('profileIcon');
+              if (existingIcon && existingIcon.parentNode) {
+                existingIcon.parentNode.remove();
+              }
+            }
+          }
+          updateAuthUI();
+          window.addEventListener('storage', updateAuthUI);
+        });
+
+        // Fetch and render mentee profile and progress logs for mentor view
+        document.addEventListener('DOMContentLoaded', async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const menteeId = urlParams.get('id');
+            if (!menteeId) return;
+            const token = localStorage.getItem('token');
+            const menteeProfile = document.getElementById('menteeProfile');
+            const progressLogsList = document.getElementById('progressLogsList');
+            const loadingStatus = document.createElement('div');
+            loadingStatus.textContent = 'Loading...';
+            menteeProfile.appendChild(loadingStatus);
+            try {
+                const res = await fetch(`/api/users/${menteeId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                if (res.ok && data.success && data.data) {
+                    const mentee = data.data;
+                    menteeProfile.innerHTML = `
+                        <strong>Name:</strong> ${mentee.firstName || ''} ${mentee.lastName || ''}<br>
+                        <strong>Email:</strong> ${mentee.email || ''}<br>
+                        <strong>Age:</strong> ${mentee.age || ''}<br>
+                        <strong>Gender:</strong> ${mentee.gender || ''}<br>
+                        <strong>Height:</strong> ${mentee.height ? mentee.height + ' cm' : ''}<br>
+                        <strong>Weight:</strong> ${mentee.weight ? mentee.weight + ' kg' : ''}<br>
+                        <strong>Goals:</strong> ${Array.isArray(mentee.goals) ? mentee.goals.join(', ') : ''}
+                    `;
+                    // Fetch progress logs
+                    const logsRes = await fetch(`/api/progress/${menteeId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const logsData = await logsRes.json();
+                    if (logsRes.ok && logsData.success && Array.isArray(logsData.data)) {
+                        renderProgressLogs(logsData.data);
+                    } else {
+                        progressLogsList.innerHTML = '<li>No progress logs found.</li>';
+                    }
+                } else {
+                    menteeProfile.innerHTML = '<span style="color:red;">Could not load mentee profile.</span>';
+                }
+            } catch (err) {
+                menteeProfile.innerHTML = '<span style="color:red;">Error loading mentee profile.</span>';
+            } finally {
+                loadingStatus.style.display = 'none';
+            }
+        });
+
+        function renderProgressLogs(logs) {
+            progressLogsList.innerHTML = '';
+            logs.forEach(log => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span><strong>Date:</strong> ${new Date(log.date).toLocaleDateString()}</span>
+                    <span><strong>Weight:</strong> ${log.weightRecorded} kg</span>
+                    <span><strong>Measurements:</strong> ${log.measurements ? JSON.stringify(log.measurements) : 'N/A'}</span>
+                    <span><strong>Workout:</strong> ${log.workoutLog || 'N/A'}</span>
+                    <span><strong>Notes:</strong> ${log.notes || 'N/A'}</span>
+                `;
+                progressLogsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

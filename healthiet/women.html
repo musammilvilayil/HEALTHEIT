@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose Your Plan - HEALTHIET</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Open+Sans:wght@800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      :root {
+        --primary-color: #116966;
+        --secondary-color: #0dc9c2;
+        --accent-color: #ff6b6b;
+        --text-light: #ffffff;
+        --text-dark: #252b42;
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        --transition-slow: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Montserrat', sans-serif;
+        overflow-x: hidden;
+        background-color: #0a4745;
+      }
+
+      /* Preloader */
+      .preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--primary-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+      }
+
+      .preloader-inner {
+        width: 80px;
+        height: 80px;
+        position: relative;
+      }
+
+      .preloader-block {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: var(--secondary-color);
+        animation: preloaderAnim 2s infinite ease-in-out;
+      }
+
+      .preloader-block:nth-child(1) {
+        top: 0;
+        left: 0;
+        animation-delay: 0s;
+      }
+
+      .preloader-block:nth-child(2) {
+        top: 0;
+        left: 30px;
+        animation-delay: 0.2s;
+      }
+
+      .preloader-block:nth-child(3) {
+        top: 0;
+        left: 60px;
+        animation-delay: 0.4s;
+      }
+
+      .preloader-block:nth-child(4) {
+        top: 30px;
+        left: 0;
+        animation-delay: 0.6s;
+      }
+
+      .preloader-block:nth-child(5) {
+        top: 30px;
+        left: 30px;
+        animation-delay: 0.8s;
+      }
+
+      .preloader-block:nth-child(6) {
+        top: 30px;
+        left: 60px;
+        animation-delay: 1s;
+      }
+
+      .preloader-block:nth-child(7) {
+        top: 60px;
+        left: 0;
+        animation-delay: 1.2s;
+      }
+
+      .preloader-block:nth-child(8) {
+        top: 60px;
+        left: 30px;
+        animation-delay: 1.4s;
+      }
+
+      .preloader-block:nth-child(9) {
+        top: 60px;
+        left: 60px;
+        animation-delay: 1.6s;
+      }
+
+      @keyframes preloaderAnim {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 1;
+          border-radius: 0;
+        }
+        50% {
+          transform: scale(0.5);
+          opacity: 0.5;
+          border-radius: 50%;
+        }
+      }
+
+      .plans-container {
+        width: 100%;
+        margin: 0 auto;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background-color: var(--primary-color);
+        background-image: 
+          radial-gradient(circle at 10% 20%, rgba(13, 201, 194, 0.15) 0%, transparent 30%),
+          radial-gradient(circle at 90% 80%, rgba(13, 201, 194, 0.15) 0%, transparent 30%);
+        opacity: 0;
+        animation: fadeIn 1s forwards 0.5s;
+      }
+      
+      .decorative-element-bottom {
+        position: absolute;
+        width: max-content;
+        height: max-content;
+        padding: 0;
+        bottom: -100px;
+        left: 0;
+        animation: float 6s ease-in-out infinite alternate;
+        z-index: 0;
+      }
+      /* Plans Content */
+      .plans-header {
+        padding: 180px 108px 100px;
+        position: relative;
+      }
+
+      .plans-title-section {
+        top: -100px;
+        margin-bottom: 120px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .plans-main-title {
+        color: var(--text-light);
+        font-family: "Open Sans", sans-serif;
+        font-size: 5.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -1px;
+        margin-bottom: 30px;
+        text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(30px);
+        opacity: 0;
+        animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
+      }
+
+      .plans-subtitle {
+        color: var(--secondary-color);
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        display: inline-block;
+        margin-bottom: 15px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.4s;
+      }
+
+      .plans-subtitle::before {
+        content: '';
+        display: inline-block;
+        width: 40px;
+        height: 2px;
+        background: var(--secondary-color);
+        margin-right: 15px;
+        vertical-align: middle;
+      }
+
+      .plans-list {
+        display: flex;
+        flex-direction: column;
+        gap: 180px;
+        padding-bottom: 150px;
+      }
+
+      .plan-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .plan-item:nth-child(odd) .plan-content {
+        order: 1;
+      }
+
+      .plan-item:nth-child(odd) .plan-image-container {
+        order: 2;
+      }
+
+      .plan-item.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .plan-content {
+        max-width: 550px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .plan-title {
+        color: var(--text-light);
+        font-family: "Open Sans", sans-serif;
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -1px;
+        margin-bottom: 25px;
+        position: relative;
+        display: inline-block;
+        text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .plan-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background: var(--secondary-color);
+        transition: var(--transition-slow);
+      }
+
+      .plan-item:hover .plan-title::after {
+        width: 150px;
+        background: var(--accent-color);
+      }
+
+      .plan-description {
+        color: rgba(255, 255, 255, 0.85);
+        font-family: "Montserrat", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 40px;
+        line-height: 1.8;
+      }
+
+      .view-plan-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 42px;
+        color: var(--text-light);
+        font-family: "Montserrat", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: 50px;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--secondary-color), #0abab5);
+        text-decoration: none;
+        transition: var(--transition);
+        border: none;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        box-shadow: 0 4px 20px rgba(13, 201, 194, 0.4);
+      }
+
+      .view-plan-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--accent-color), #ff5252);
+        z-index: -1;
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .view-plan-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(13, 201, 194, 0.6);
+      }
+
+      .view-plan-btn:hover::before {
+        opacity: 1;
+      }
+
+      .view-plan-btn i {
+        transition: var(--transition);
+      }
+
+      .view-plan-btn:hover i {
+        transform: translateX(8px);
+      }
+
+      .plan-image-container {
+        position: relative;
+        perspective: 1000px;
+      }
+
+      .plan-image {
+        width: 500px;
+        height: 500px;
+        object-fit: contain;
+        filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.3));
+        transition: var(--transition-slow);
+        position: relative;
+        z-index: 1;
+        transform-style: preserve-3d;
+      }
+
+      .plan-item:hover .plan-image {
+        transform: scale(1.05) rotateY(5deg) rotateX(5deg);
+      }
+
+      .image-border {
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        border: 2px dashed rgba(13, 201, 194, 0.5);
+        border-radius: 15px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(0deg);
+        transition: var(--transition-slow);
+      }
+
+      .plan-item:hover .image-border {
+        transform: translate(-50%, -50%) rotate(45deg);
+        border-color: rgba(255, 107, 107, 0.6);
+      }
+
+      /* Decorative Elements */
+      .blur-circle {
+        position: absolute;
+        width: 700px;
+        height: 700px;
+        border-radius: 50%;
+        background: var(--secondary-color);
+        mix-blend-mode: overlay;
+        filter: blur(150px);
+        opacity: 0.5;
+        transition: all 10s ease-in-out;
+      }
+
+      .blur-1 {
+        left: -200px;
+        top: -200px;
+        animation: float 15s infinite ease-in-out;
+      }
+
+      .blur-2 {
+        right: -200px;
+        top: 500px;
+        animation: float 12s infinite 2s ease-in-out;
+      }
+
+      .blur-3 {
+        left: -300px;
+        top: 1100px;
+        animation: float 18s infinite 1s ease-in-out;
+      }
+
+      .blur-4 {
+        right: -100px;
+        top: 1700px;
+        animation: float 14s infinite 3s ease-in-out;
+      }
+
+      /* Floating Particles */
+      .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Floating bubbles */
+      .bubble {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Back to top button */
+      .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: var(--secondary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        z-index: 999;
+        box-shadow: 0 5px 20px rgba(13, 201, 194, 0.4);
+      }
+
+      .back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .back-to-top:hover {
+        transform: translateY(-5px) scale(1.1);
+        background: var(--accent-color);
+      }
+
+      /* Animations */
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0) translateX(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-40px) translateX(20px) rotate(5deg);
+        }
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes fadeInUp {
+        from { 
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to { 
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(0); }
+      }
+
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 1440px) {
+        .plans-header {
+          padding: 150px 80px 80px;
+        }
+        
+        .plan-image {
+          width: 450px;
+          height: 450px;
+        }
+        
+        .image-border {
+          width: 470px;
+          height: 470px;
+        }
+      }
+
+      @media (max-width: 1200px) {
+        .header, .plans-header {
+          padding: 150px 60px 60px;
+        }
+        
+        .plans-main-title {
+          font-size: 4.5rem;
+        }
+        
+        .plan-title {
+          font-size: 3.5rem;
+        }
+        
+        .plan-image {
+          width: 400px;
+          height: 400px;
+        }
+        
+        .image-border {
+          width: 420px;
+          height: 420px;
+        }
+      }
+
+      @media (max-width: 991px) {
+        .header {
+          padding: 20px 30px;
+        }
+        
+        .plans-header {
+          padding: 120px 30px 60px;
+        }
+
+        .plans-main-title {
+          font-size: 3.5rem;
+        }
+
+        .plan-title {
+          font-size: 2.8rem;
+        }
+
+        .plan-item {
+          flex-direction: column;
+          text-align: center;
+          gap: 80px;
+        }
+
+        .plan-item:nth-child(odd) .plan-content,
+        .plan-item:nth-child(odd) .plan-image-container {
+          order: initial;
+        }
+
+        .plan-content {
+          max-width: 100%;
+        }
+
+        .plan-title::after {
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        .plan-image {
+          width: 350px;
+          height: 350px;
+        }
+        
+        .image-border {
+          width: 370px;
+          height: 370px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          padding: 15px 20px;
+        }
+
+        .nav-links {
+          gap: 20px;
+        }
+
+        .plans-header {
+          padding: 100px 20px 40px;
+        }
+
+        .plans-main-title {
+          font-size: 2.8rem;
+          margin-bottom: 20px;
+        }
+
+        .plans-subtitle {
+          font-size: 1rem;
+        }
+
+        .plan-title {
+          font-size: 2.2rem;
+        }
+
+        .plan-description {
+          font-size: 1rem;
+        }
+
+        .plan-image {
+          width: 280px;
+          height: 280px;
+        }
+        
+        .image-border {
+          width: 300px;
+          height: 300px;
+        }
+
+        .view-plan-btn {
+          padding: 14px 32px;
+          font-size: 0.9rem;
+        }
+        
+        .sign-in-btn {
+          padding: 10px 24px;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 15px;
+        }
+        
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+          gap: 15px;
+        }
+        
+        .plans-main-title {
+          font-size: 2.2rem;
+        }
+        
+        .plan-title {
+          font-size: 1.8rem;
+        }
+        
+        .plan-image {
+          width: 220px;
+          height: 220px;
+        }
+        
+        .image-border {
+          width: 240px;
+          height: 240px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+      <div class="preloader-inner">
+        <div class="preloader-block"></div>
+        <div class="preloader-block"></div>
+        <div class="preloader-block"></div>
+        <div class="preloader-block"></div>
+        <div class="preloader-block"></div>
+        <div class="preloader-block"></div>
+        <div class="preloader-block"></div>
+        <div class="preloader-block"></div>
+        <div class="preloader-block"></div>
+      </div>
+    </div>
+    
+
+    <div class="plans-container">
+      <!-- Navigation Bar --><img
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/a8c04f835448d4d197d0736bad8334dc361dc14b"
+        alt="Decorative top element"
+        class="decorative-element-top"
+        id="decorativeTop"
+      />
+      <header class="header">
+        <a href="index.html" class="logo">HEALTHIET</a>
+        <nav class="nav-links" id="mainNav">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="services.html" class="nav-link">Services</a>
+          <a href="Support.html" class="nav-link">Support</a>
+        </nav>
+        <a href="auth.html" class="sign-in-btn" id="signInButton">Sign in</a>
+      </header>
+      <img
+        src="imgs/3.png"
+        alt="Decorative bottom element"
+        class="decorative-element-bottom"
+        id="decorativeBottom"
+      />
+      <!-- Main Content -->
+      <div class="plans-header">
+        <div class="plans-title-section">
+          <p class="plans-subtitle animate__animated animate__fadeIn">Premium Fitness Plans</p>
+          <h1 class="plans-main-title">
+            Choose Your<br />
+            Perfect Plan
+          </h1>
+        </div>
+
+
+        <div class="plans-list">
+          <!-- Full Body Training -->
+          <div class="plan-item">
+            <div class="plan-content">
+              <h2 class="plan-title">
+                Lean Muscle
+<br />
+               Training
+              </h2>
+              <p class="plan-description">
+                Our comprehensive  Lean Muscle   Training targets all major muscle groups with scientifically-proven exercises to build strength, endurance, and mobility. Perfect for beginners and intermediates alike.
+              </p>
+              <div class="plan-features" style="margin-bottom: 30px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                  <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+                  <span>30+ workout variations</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                  <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+                  <span>Detailed video instructions</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+                  <span>Progress tracking</span>
+                </div>
+              </div>
+              <a href="lmt.html" class="view-plan-btn">
+                Explore Plan <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+            <div class="plan-image-container">
+              <div class="image-border"></div>
+              <img
+                src="imgs/leanmuscle.png"
+                alt="Full body training"
+                class="plan-image"
+              />
+            </div>
+          </div>
+
+          <!-- Fat Loss Training -->
+          <div class="plan-item">
+  <div class="plan-content">
+    <h2 class="plan-title">
+      Fat Loss <br />Igniter
+    </h2>
+    <p class="plan-description">
+      **Unleash your fat-burning potential with this dynamic program designed for women.** Combining targeted strength training and high-intensity cardio, this plan optimizes your metabolism for efficient fat loss while sculpting a lean and toned physique.
+    </p>
+    <div class="plan-features" style="margin-bottom: 30px;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+        <span>Metabolism-boosting workouts</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+        <span>Strategic cardio integration</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+        <span>Body recomposition focus</span>
+      </div>
+    </div>
+    <a href="ftlw.html" class="view-plan-btn">
+      Explore Plan <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="plan-image-container">
+    <div class="image-border"></div>
+    <img
+      src="imgs/fatlossw.png"
+      alt="Fat loss training for women"
+      class="plan-image"
+    />
+  </div>
+</div>
+          <div class="plan-item">
+  <div class="plan-content">
+    <h2 class="plan-title">
+      Balanced <br />
+     Training
+    </h2>
+    <p class="plan-description">
+      **Empower your body with this intelligently designed program for women.** Focus on building sustainable strength, improving flexibility, and enhancing overall well-being. Achieve a confident and capable physique that supports your everyday life.
+    </p>
+    <div class="plan-features" style="margin-bottom: 30px;">
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+        <span>Targeted strength development</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+        <span>Functional movement patterns</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-check-circle" style="color: var(--secondary-color);"></i>
+        <span>Flexibility & mobility focus</span>
+      </div>
+    </div>
+    <a href="bt.html" class="view-plan-btn">
+      Explore Plan <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="plan-image-container">
+    <div class="image-border"></div>
+    <img
+      src="imgs/balanced.png"
+      alt="Balanced training for women"
+      class="plan-image"
+    />
+  </div>
+</div>
+
+        <!-- Decorative Blur Circles -->
+        <div class="blur-circle blur-1"></div>
+        <div class="blur-circle blur-2"></div>
+        <div class="blur-circle blur-3"></div>
+        <div class="blur-circle blur-4"></div>
+      </div>
+      
+      <!-- Back to top button -->
+      <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+      </div>
+    </div>
+    </main>
+
+    </main>
+    <script>
+      // Preloader
+      window.addEventListener('load', function() {
+        const preloader = document.getElementById('preloader');
+        setTimeout(() => {
+          preloader.style.opacity = '0';
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 500);
+        }, 1000);
+      });
+
+      // Scroll animation for plan items
+      document.addEventListener('DOMContentLoaded', function() {
+        const planItems = document.querySelectorAll('.plan-item');
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, {
+          threshold: 0.1,
+          rootMargin: '0px 0px -100px 0px'
+        });
+
+        planItems.forEach((item, index) => {
+          // Add delay based on index for staggered animation
+          item.style.transitionDelay = `${index * 0.1}s`;
+          observer.observe(item);
+        });
+
+        // Add floating particles
+        function createParticles() {
+          const container = document.querySelector('.plans-container');
+          const particleCount = window.innerWidth < 768 ? 20 : 50;
+          
+          for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random properties
+            const size = Math.random() * 6 + 2;
+            const posX = Math.random() * window.innerWidth;
+            const posY = Math.random() * document.body.scrollHeight;
+            const opacity = Math.random() * 0.6 + 0.2;
+            const duration = Math.random() * 25 + 15;
+            const delay = Math.random() * 5;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}px`;
+            particle.style.top = `${posY}px`;
+            particle.style.opacity = opacity;
+            particle.style.animation = `float ${duration}s ${delay}s infinite ease-in-out`;
+            
+            container.appendChild(particle);
+          }
+          
+          // Add larger bubbles
+          const bubbleCount = window.innerWidth < 768 ? 5 : 10;
+          for (let i = 0; i < bubbleCount; i++) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            
+            const size = Math.random() * 100 + 50;
+            const posX = Math.random() * window.innerWidth;
+            const posY = Math.random() * document.body.scrollHeight;
+            const opacity = Math.random() * 0.1 + 0.05;
+            const duration = Math.random() * 40 + 20;
+            const delay = Math.random() * 10;
+            
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${posX}px`;
+            bubble.style.top = `${posY}px`;
+            bubble.style.opacity = opacity;
+            bubble.style.animation = `float ${duration}s ${delay}s infinite ease-in-out`;
+            
+            container.appendChild(bubble);
+          }
+        }
+        
+        createParticles();
+        
+        // Back to top button
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', function() {
+          if (window.pageYOffset > 300) {
+            backToTopButton.classList.add('visible');
+          } else {
+            backToTopButton.classList.remove('visible');
+          }
+        });
+        
+        backToTopButton.addEventListener('click', function() {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+        
+        // Header shadow on scroll
+        const header = document.getElementById('mainHeader');
+        
+        window.addEventListener('scroll', function() {
+          if (window.pageYOffset > 50) {
+            header.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.2)';
+          } else {
+            header.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+          }
+        });
+        
+        // Add ripple effect to buttons
+        function createRipple(event) {
+          const button = event.currentTarget;
+          const circle = document.createElement("span");
+          const diameter = Math.max(button.clientWidth, button.clientHeight);
+          const radius = diameter / 2;
+          
+          circle.style.width = circle.style.height = `${diameter}px`;
+          circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+          circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+          circle.classList.add("ripple");
+          
+          const ripple = button.getElementsByClassName("ripple")[0];
+          
+          if (ripple) {
+            ripple.remove();
+          }
+          
+          button.appendChild(circle);
+        }
+        
+        const buttons = document.querySelectorAll(".view-plan-btn, .sign-in-btn");
+        buttons.forEach(button => {
+          button.addEventListener("click", createRipple);
+        });
+      });
+    </script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const mainHeader = document.getElementById("mainHeader") || document.getElementById("header") || document.querySelector("header");
+  const signInButton = document.getElementById("signInButton");
+  function updateAuthUI() {
+    const isLoggedIn = window.isLoggedIn && window.isLoggedIn();
+    if (isLoggedIn) {
+      if (signInButton) signInButton.style.display = 'none';
+      if (!document.getElementById('profileIcon')) {
+        const userRole = window.getUserRole ? window.getUserRole() : 'Public';
+        const dashboardUrl = window.getDashboardUrl ? window.getDashboardUrl(userRole) : 'mentee_dashboard.html';
+        const profileLink = document.createElement('a');
+        profileLink.href = dashboardUrl;
+        profileLink.innerHTML = '<i class="bi bi-person-circle user-profile-icon" id="profileIcon" title="Profile"></i>';
+        profileLink.style.marginLeft = '16px';
+        if (mainHeader) mainHeader.appendChild(profileLink);
+      }
+    } else {
+      if (signInButton) signInButton.style.display = '';
+      const existingIcon = document.getElementById('profileIcon');
+      if (existingIcon && existingIcon.parentNode) {
+        existingIcon.parentNode.remove();
+      }
+    }
+  }
+  updateAuthUI();
+  window.addEventListener('storage', updateAuthUI);
+});
+</script>
+  <!--#include file="components/universal-footer.html" -->
+  <!-- Universal Footer Component for Healthiet -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+  /* Universal Footer Styles */
+  .universal-footer { background: linear-gradient(135deg, #126663 0%, #0a4f4c 100%); color: #ffffff; padding: 3rem 0 1.5rem 0; margin-top: auto; position: relative; overflow: hidden; box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1); }
+  .universal-footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(13, 201, 194, 0.8), transparent); }
+  .universal-footer::after { content: ''; position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(13, 201, 194, 0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .footer-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+  .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem; margin-bottom: 2rem; }
+  .footer-section h3 { color: #0dc9c2; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; position: relative; }
+  .footer-section h3::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 30px; height: 2px; background: #0dc9c2; border-radius: 2px; }
+  .footer-section h3 i { font-size: 1.1rem; color: #0dc9c2; }
+  .footer-section p { line-height: 1.7; margin-bottom: 1rem; opacity: 0.9; color: rgba(255, 255, 255, 0.9); }
+  .footer-links { list-style: none; padding: 0; }
+  .footer-links li { margin-bottom: 0.5rem; }
+  .footer-links a { color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; border-radius: 4px; font-weight: 500; }
+  .footer-links a:hover { color: #0dc9c2; transform: translateX(8px); background: rgba(13, 201, 194, 0.1); padding-left: 0.5rem; }
+  .footer-links a i { font-size: 0.9rem; width: 18px; color: #0dc9c2; opacity: 0.8; transition: all 0.3s ease; }
+  .footer-links a:hover i { opacity: 1; transform: scale(1.1); }
+  .social-links { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+  .social-link { width: 42px; height: 42px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ffffff; text-decoration: none; transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.2); position: relative; overflow: hidden; }
+  .social-link::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0dc9c2; transform: scale(0); transition: transform 0.3s ease; border-radius: 50%; z-index: -1; }
+  .social-link:hover::before { transform: scale(1); }
+  .social-link:hover { color: #ffffff; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(13, 201, 194, 0.4); border-color: #0dc9c2; }
+  .social-link i { font-size: 1.1rem; z-index: 1; }
+  .contact-info { list-style: none; padding: 0; }
+  .contact-info li { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; color: rgba(255, 255, 255, 0.9); padding: 0.3rem 0; }
+  .contact-info i { color: #0dc9c2; width: 20px; text-align: center; font-size: 1rem; }
+  .newsletter-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+  .newsletter-input { flex: 1; padding: 0.8rem 1rem; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 25px; background: rgba(255, 255, 255, 0.1); color: #ffffff; font-size: 0.9rem; transition: all 0.3s ease; font-family: inherit; }
+  .newsletter-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+  .newsletter-input:focus { outline: none; border-color: #0dc9c2; background: rgba(255, 255, 255, 0.15); box-shadow: 0 0 0 3px rgba(13, 201, 194, 0.2); }
+  .newsletter-btn { padding: 1rem 3rem; background: #0dc9c2; color: #ffffff; border: none; border-radius: 25px; font-weight: 400; cursor: pointer; transition: all 0.3s ease; white-space: nowrap; font-family: inherit; position: relative; overflow: hidden; }
+  .newsletter-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.5s ease; }
+  .newsletter-btn:hover::before { left: 100%; }
+  .newsletter-btn:hover { background: #0ab6b0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13, 201, 194, 0.4); }
+  .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-copyright { color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+  .footer-legal { display: flex; gap: 1.5rem; list-style: none; padding: 0; margin: 0; }
+  .footer-legal a { color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; font-weight: 500; }
+  .footer-legal a:hover { color: #0dc9c2; }
+  .footer-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+  .footer-logo { font-size: 1.6rem; font-weight: 800; background: linear-gradient(45deg, #0dc9c2, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
+  @media (max-width: 768px) { .universal-footer { padding: 2rem 0 1rem 0; } .footer-container { padding: 0 1rem; } .footer-content { grid-template-columns: 1fr; gap: 2rem; } .footer-bottom { flex-direction: column; text-align: center; gap: 1rem; } .footer-legal { flex-wrap: wrap; justify-content: center; } .newsletter-form { flex-direction: column; gap: 0.75rem; } .social-links { justify-content: center; } } @media (max-width: 480px) { .footer-section h3 { font-size: 1.1rem; } .footer-content { gap: 1.5rem; } .social-link { width: 38px; height: 38px; } } @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } .footer-section { animation: fadeInUp 0.6s ease-out; } .footer-section:nth-child(1) { animation-delay: 0.1s; } .footer-section:nth-child(2) { animation-delay: 0.2s; } .footer-section:nth-child(3) { animation-delay: 0.3s; } .footer-section:nth-child(4) { animation-delay: 0.4s; } .dark-mode .universal-footer { background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-top: 1px solid rgba(255, 255, 255, 0.1); }
+  </style>
+  <footer class="universal-footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-brand">
+            <span class="footer-logo">HEALTHIET</span>
+          </div>
+          <p>Your trusted partner in health and wellness. Empowering individuals to achieve their fitness goals through personalized guidance and cutting-edge technology.</p>
+          <div class="social-links">
+            <a href="#" class="social-link" title="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-link" title="Twitter"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="social-link" title="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-link" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            <a href="#" class="social-link" title="YouTube"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-section">
+          <h3><i class="bi bi-link-45deg"></i> Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="index.html"><i class="bi bi-house"></i> Home</a></li>
+            <li><a href="services.html"><i class="bi bi-gear"></i> Services</a></li>
+            <li><a href="calorie-hub.html"><i class="bi bi-calculator"></i> Calorie Calculator</a></li>
+            <li><a href="bmi.html"><i class="bi bi-person-check"></i> BMI Calculator</a></li>
+            <li><a href="workout.html"><i class="bi bi-activity"></i> Workouts</a></li>
+            <li><a href="diet.html"><i class="bi bi-heart-pulse"></i> Diet Plans</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3><i class="bi bi-headset"></i> Support</h3>
+          <ul class="footer-links">
+            <li><a href="Support.html"><i class="bi bi-question-circle"></i> Help Center</a></li>
+            <li><a href="contact.html"><i class="bi bi-envelope"></i> Contact Us</a></li>
+            <li><a href="auth.html"><i class="bi bi-person-plus"></i> Create Account</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3><i class="bi bi-envelope-heart"></i> Stay Connected</h3>
+          <ul class="contact-info">
+            <li><i class="bi bi-geo-alt"></i><span>123 Health Street, Wellness City, WC 12345</span></li>
+            <li><i class="bi bi-telephone"></i><span>+1 (555) 123-4567</span></li>
+            <li><i class="bi bi-envelope"></i><span>support@healthiet.com</span></li>
+          </ul>
+          <div class="newsletter">
+            <p style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 600;">Subscribe to our newsletter:</p>
+            <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+              <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+              <button type="submit" class="newsletter-btn"><i class="bi bi-send"></i> Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          <p>&copy; 2024 Healthiet. All rights reserved. Built with ❤️ for your health.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+  function subscribeNewsletter(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('.newsletter-input').value;
+    console.log('Newsletter subscription for:', email);
+    const button = event.target.querySelector('.newsletter-btn');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-check2"></i> Subscribed!';
+    button.style.background = '#28a745';
+    button.disabled = true;
+    setTimeout(() => {
+      button.innerHTML = originalText;
+      button.style.background = '#0dc9c2';
+      button.disabled = false;
+      event.target.reset();
+    }, 3000);
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    const footerLinks = document.querySelectorAll('.footer-links a[href^="#"]');
+    footerLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  });
+  </script>
+  </body>
+    <!--#include file="components/universal-footer.html" -->
+</html>

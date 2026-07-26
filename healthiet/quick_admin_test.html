@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Admin Login Test</title>
+    <script src="js/clientLogger.js"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+        input, button { padding: 8px; margin: 5px; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Quick Admin Login Test</h1>
+    
+    <div class="section">
+        <h2>Step 1: Current Authentication Status</h2>
+        <button onclick="checkCurrentAuth()">Check Current Auth Status</button>
+        <div id="authStatus"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Step 2: Quick Admin Login</h2>
+        <form id="adminLoginForm">
+            <input type="email" name="email" value="admin@healthiet.com" placeholder="Admin Email" required>
+            <input type="password" name="password" value="adminpassword123" placeholder="Admin Password" required>
+            <button type="submit">Login as Admin</button>
+        </form>
+        <div id="loginResult"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Step 3: Test Admin Portal Access</h2>
+        <button onclick="testAdminAccess()">Test Admin Access</button>
+        <button onclick="goToAdminPortal()">Go to Admin Portal</button>
+        <div id="accessResult"></div>
+    </div>
+    
+    <div class="section">
+        <h2>Utilities</h2>
+        <button onclick="clearAllAuth()">Clear All Auth Data</button>
+        <button onclick="showStorageData()">Show Storage Data</button>
+        <div id="utilityResult"></div>
+    </div>
+
+    <script>
+        function checkCurrentAuth() {
+            const isAuth = window.authManager.isAuthenticated();
+            const token = window.authManager.getToken();
+            const user = window.authManager.getUser();
+            const role = window.authManager.getUserRole();
+            const userId = window.authManager.getUserId();
+            
+            // Also check legacy storage
+            const legacyRole = localStorage.getItem('userRole');
+            const legacyUserId = localStorage.getItem('userId');
+            
+            document.getElementById('authStatus').innerHTML = `
+                <div class="${isAuth ? 'success' : 'error'}">
+                    <h3>Authentication Status: ${isAuth ? 'AUTHENTICATED' : 'NOT AUTHENTICATED'}</h3>
+                    <p><strong>Has Token:</strong> ${token ? 'Yes' : 'No'}</p>
+                    <p><strong>User Role:</strong> ${role || 'None'}</p>
+                    <p><strong>User ID:</strong> ${userId || 'None'}</p>
+                    <p><strong>Legacy Role:</strong> ${legacyRole || 'None'}</p>
+                    <p><strong>Legacy User ID:</strong> ${legacyUserId || 'None'}</p>
+                    <p><strong>User Data:</strong></p>
+                    <pre>${JSON.stringify(user, null, 2)}</pre>
+                </div>
+            `;
+        }
+        
+        function testAdminAccess() {
+            const isAuth = window.authManager.isAuthenticated();
+            const role = window.authManager.getUserRole();
+            const hasAdminAccess = role && (role.toLowerCase() === 'admin' || role.toLowerCase() === 'administrator');
+            
+            document.getElementById('accessResult').innerHTML = `
+                <div class="${hasAdminAccess ? 'success' : 'error'}">
+                    <h3>Admin Access: ${hasAdminAccess ? 'GRANTED' : 'DENIED'}</h3>
+                    <p><strong>Is Authenticated:</strong> ${isAuth}</p>
+                    <p><strong>User Role:</strong> ${role}</p>
+                    <p><strong>Has Admin Access:</strong> ${hasAdminAccess}</p>
+                </div>
+            `;
+        }
+        
+        function goToAdminPortal() {
+            window.location.href = 'admin_portal.html';
+        }
+        
+        function clearAllAuth() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('sessionId');
+            
+            document.getElementById('utilityResult').innerHTML = `
+                <div class="info">All authentication data cleared. Check auth status again.</div>
+            `;
+            
+            setTimeout(checkCurrentAuth, 100);
+        }
+        
+        function showStorageData() {
+            const allStorage = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allStorage[key] = localStorage.getItem(key);
+            }
+            
+            document.getElementById('utilityResult').innerHTML = `
+                <div class="info">
+                    <h4>All Local Storage Data:</h4>
+                    <pre>${JSON.stringify(allStorage, null, 2)}</pre>
+                </div>
+            `;
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkCurrentAuth();
+            
+            // Setup login form
+            document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = this.querySelector('[name="email"]').value;
+                const password = this.querySelector('[name="password"]').value;
+                
+                document.getElementById('loginResult').innerHTML = '<div class="info">Logging in...</div>';
+                
+                try {
+                    const result = await window.authManager.login(email, password);
+                    
+                    if (result.success) {
+                        document.getElementById('loginResult').innerHTML = `
+                            <div class="success">
+                                <h3>Login Success!</h3>
+                                <p><strong>User:</strong> ${result.user.email}</p>
+                                <p><strong>Role:</strong> ${result.user.role}</p>
+                                <p><strong>Token received:</strong> Yes</p>
+                            </div>
+                        `;
+                        
+                        // Refresh auth status
+                        setTimeout(checkCurrentAuth, 100);
+                        setTimeout(testAdminAccess, 200);
+                    } else {
+                        document.getElementById('loginResult').innerHTML = `
+                            <div class="error">
+                                <h3>Login Failed</h3>
+                                <p>${result.message}</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    document.getElementById('loginResult').innerHTML = `
+                        <div class="error">
+                            <h3>Login Error</h3>
+                            <p>${error.message}</p>
+                        </div>
+                    `;
+                }
+            });
+        });
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

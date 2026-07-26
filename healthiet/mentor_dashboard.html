@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Dashboard - Healthiet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Centralized Authentication System -->
+
+    <style>
+        :root {
+            --primary-color: #126663;
+            --primary-light: #0dc9c2;
+            --primary-lighter: rgba(13, 201, 194, 0.1);
+            --secondary-color: #e74a3b;
+            --dark-color: #333;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+            --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Montserrat", sans-serif;
+            background: var(--gradient-bg);
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding-bottom: 100px; /* Space for fixed footer */
+            min-height: 100vh;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 1.2rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(13, 201, 194, 0.1);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-light);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .user-profile-icon {
+            font-size: 1.5rem;
+            color: var(--primary-light);
+            cursor: pointer;
+            margin-left: 16px;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 992px) {
+            main {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+          .dashboard-section {
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            z-index: 1;
+        }
+
+        .dashboard-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dashboard-section h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .dashboard-section h2 i {
+            margin-right: 10px;
+            color: var(--primary-light);
+        }
+        
+        .profile-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-right: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(-45deg);
+            transition: transform 0.6s;
+        }
+
+        .profile-avatar:hover::before {
+            transform: rotate(-45deg) translateX(100%);
+        }
+        
+        .profile-details h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+        
+        .profile-details p {
+            margin: 0.2rem 0;
+            color: var(--gray-color);
+        }
+        
+        .stats-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-box {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            background: #f0f8f8;
+            border: 1px solid rgba(13, 201, 194, 0.1);
+            transition: var(--transition);
+        }
+
+        .stat-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+        
+        .edit-profile-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--primary-light);
+            border-radius: var(--border-radius);
+            background-color: var(--primary-light);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .edit-profile-link:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .mentees-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .mentees-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .mentee-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mentee-card:hover {
+            background-color: #f0f8f8;
+            transform: translateY(-3px);
+        }
+        
+        .mentee-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .mentee-details h3 {
+            margin: 0 0 0.3rem 0;
+            font-size: 1rem;
+        }
+        
+        .mentee-details p {
+            margin: 0.2rem 0;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .mentee-progress {
+            width: 100%;
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .mentee-progress-bar {
+            height: 100%;
+            background-color: var(--primary-light);
+            border-radius: 3px;
+        }
+        
+        .chat-section {
+            grid-column: 1 / -1;
+        }
+        
+        .mentee-selector {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 0 0 1rem 0;
+        }
+
+        .mentee-selector::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .mentee-selector::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .mentee-selector::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+        }
+
+        .mentee-selector::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+        
+        .mentee-chat-item {
+            min-width: 120px;
+            text-align: center;
+            cursor: pointer;
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+        }
+        
+        .mentee-chat-item:hover, .mentee-chat-item.active {
+            background-color: #f0f8f8;
+            border-color: var(--primary-light);
+        }
+        
+        .mentee-chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 auto 0.5rem auto;
+        }
+        
+        .mentee-chat-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .chat-box {
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        
+        .message {
+            max-width: 75%;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.sent {
+            margin-left: auto;
+        }
+        
+        .message.received {
+            margin-right: auto;
+        }
+        
+        .message-content {
+            display: inline-block;
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            background-color: #f0f8f8;
+            position: relative;
+        }
+        
+        .message.sent .message-content {
+            background-color: var(--primary-light);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.received .message-content {
+            background-color: #f0f0f0;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--gray-color);
+            margin-top: 0.3rem;
+            padding: 0 0.5rem;
+        }
+        
+        .chat-input-form {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #e9ecef;
+            background: white;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid #e9ecef;
+            border-radius: 24px;
+            font-size: 1rem;
+            transition: var(--transition);
+            outline: none;
+        }
+        
+        .chat-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(13, 201, 194, 0.2);
+        }
+        
+        .chat-input-form button {
+            margin-left: 0.8rem;
+            background-color: var(--primary-light);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-input-form button:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+        
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--gray-color);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-color);
+        }
+        
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-light);
+            opacity: 0.7;
+        }
+        
+        .empty-state p {
+            font-size: 1rem;
+        }
+        
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 1.5rem 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background: #fff;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+            z-index: 90;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-top: 1px solid rgba(13, 201, 194, 0.1);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .mentee-card .notification-badge {
+            top: 5px;
+            right: 5px;
+            width: 18px;
+            height: 18px;
+            font-size: 0.6rem;
+        }
+        
+        .message-status {
+            position: absolute;
+            bottom: -18px;
+            right: 8px;
+            font-size: 0.65rem;
+            color: var(--gray-color);
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .dashboard-section {
+                padding: 1.2rem;
+            }
+            
+            .profile-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-header h3 i {
+            margin-right: 0.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-color);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background-color: #e9ecef;
+            color: var(--primary-color);
+        }
+
+        .profile-update-form {
+            padding: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(13, 201, 194, 0.1);
+        }
+
+        .form-group input[readonly] {
+            background-color: #f8f9fa;
+            color: var(--gray-color);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 0.3rem;
+            color: var(--gray-color);
+            font-size: 0.85rem;
+        }
+
+        .social-links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .edit-profile-link {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .edit-profile-link:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        #bioCount {
+            text-align: right;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal {
+                padding: 0.5rem;
+            }
+
+            .modal-content {
+                max-height: 95vh;
+            }
+
+            .modal-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .profile-update-form {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .social-links-container input {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Analytics Overview Styles */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .analytics-card {
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .analytics-card:hover {
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .analytics-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-right: 1rem;
+        }
+        
+        .analytics-content h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .analytics-content p {
+            margin: 0.2rem 0;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .analytics-trend {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .analytics-trend i {
+            margin-right: 0.3rem;
+        }
+        
+        .analytics-chart {
+            margin-top: 1.5rem;
+        }
+        
+        /* Quick Actions Styles */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .quick-action-btn {
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid #e9ecef;
+        }
+        
+        .quick-action-btn:hover {
+            background-color: #f0f8f8;
+            transform: translateY(-2px);
+        }
+        
+        .action-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 1rem;
+        }
+        
+        .action-content h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .action-content p {
+            margin: 0.2rem 0;
+            color: var(--gray-color);
+            font-size: 0.85rem;
+        }
+        
+        /* Recent Activity Styles */
+        .activity-timeline {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+        }
+        
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            white-space: nowrap;
+        }
+        
+        .activity-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            padding: 0.8rem;
+            border-radius: var(--border-radius);
+            background: #f8f9fa;
+            position: relative;
+        }
+        
+        .activity-content::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -8px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            transform: translateY(-50%);
+        }
+        
+        .activity-icon {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+        
+        .view-all-btn {
+            margin-top: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--border-radius);
+            background-color: var(--primary-light);
+            color: white;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .view-all-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Analytics Section Styles */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .analytics-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid #e9ecef;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .analytics-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .analytics-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .analytics-content p {
+            margin: 0.2rem 0;
+            color: var(--gray-color);
+            font-weight: 500;
+        }
+
+        .analytics-trend {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .analytics-trend.positive {
+            color: #28a745;
+        }
+
+        .analytics-trend.negative {
+            color: #dc3545;
+        }
+
+        .analytics-trend.neutral {
+            color: var(--gray-color);
+        }
+
+        .analytics-chart {
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .analytics-chart h4 {
+            margin: 0 0 1rem 0;
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+        }
+
+        /* Quick Actions Section Styles */
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-action-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .quick-action-btn:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-lighter);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .action-content h4 {
+            margin: 0 0 0.3rem 0;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        .action-content p {
+            margin: 0;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        /* Recent Activity Section Styles */
+        .activity-timeline {
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            white-space: nowrap;
+            min-width: 80px;
+        }
+
+        .activity-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 1;
+        }
+
+        .activity-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.message {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .activity-icon.session {
+            background: #e8f5e8;
+            color: #388e3c;
+        }
+
+        .activity-icon.new-mentee {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .activity-icon.rating {
+            background: #fef7e0;
+            color: #f9a825;
+        }
+
+        .activity-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .view-all-btn {
+            background: var(--primary-light);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .analytics-card {
+                padding: 1rem;
+            }
+
+            .analytics-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .analytics-content h3 {
+                font-size: 1.5rem;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-action-btn {
+                padding: 1rem;
+            }
+
+            .action-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .activity-item {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .activity-time {
+                font-size: 0.7rem;
+                min-width: auto;
+            }
+        }
+
+        /* Additional UI Enhancements */
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 2px 8px rgba(13, 201, 194, 0.3);
+        }
+
+        /* Loading animations */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-section {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        /* Stagger animation delays for sections */
+        .dashboard-section:nth-child(1) { animation-delay: 0.1s; }
+        .dashboard-section:nth-child(2) { animation-delay: 0.2s; }
+        .dashboard-section:nth-child(3) { animation-delay: 0.3s; }
+        .dashboard-section:nth-child(4) { animation-delay: 0.4s; }
+        .dashboard-section:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Focus states for accessibility */
+        .btn:focus,
+        .edit-profile-link:focus {
+            outline: 3px solid rgba(13, 201, 194, 0.5);
+            outline-offset: 2px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(13, 201, 194, 0.2);
+        }
+
+        @media (max-width: 992px) {
+            main {
+                grid-template-columns: 1fr;
+                padding: 0 0.5rem;
+            }
+            
+            .dashboard-section {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .dashboard-section {
+                padding: 1rem;
+            }
+            
+            .dashboard-section h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="mainHeader">
+        <a href="index.html" class="logo">
+            <i class="bi bi-heart-pulse"></i>
+            HEALTHIET
+        </a>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <span id="userInfo" style="color: var(--primary-color); font-weight: 500;"></span>
+            <button id="logoutButton" class="btn btn-danger" style="display: none;">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
+            <button id="signInButton" class="btn btn-primary" style="display: none;">
+                <i class="bi bi-box-arrow-in-right"></i> Sign In
+            </button>
+            <span id="profileIconContainer"></span>
+        </div>
+    </header>
+    
+    <main>
+        <div class="dashboard-section" id="profileSection">
+            <h2><i class="bi bi-person-badge"></i> Mentor Profile</h2>
+            <div id="profileInfo" class="loading-spinner">
+                Loading profile information...
+            </div>
+        </div>
+        
+        <div class="dashboard-section" id="menteesSection">
+            <h2><i class="bi bi-people"></i> My Mentees <span id="menteeCount" style="font-size: 0.9rem; color: var(--gray-color); font-weight: normal;"></span></h2>
+            <div id="menteesList" class="loading-spinner">
+                Loading mentee list...
+            </div>
+        </div>
+        
+       
+        <!-- Analytics Overview Section -->
+        <div class="dashboard-section" id="analyticsSection">
+            <h2><i class="bi bi-graph-up"></i> Analytics Overview</h2>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="analytics-content">
+                        <h3 id="totalMentees">0</h3>
+                        <p>Total Mentees</p>
+                        <small class="analytics-trend positive">
+                            <i class="bi bi-arrow-up"></i> +12% this month
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="bi bi-chat-dots-fill"></i>
+                    </div>
+                    <div class="analytics-content">
+                        <h3 id="totalMessages">0</h3>
+                        <p>Messages Exchanged</p>
+                        <small class="analytics-trend positive">
+                            <i class="bi bi-arrow-up"></i> +8% this week
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                    <div class="analytics-content">
+                        <h3 id="totalSessions">0</h3>
+                        <p>Sessions Completed</p>
+                        <small class="analytics-trend positive">
+                            <i class="bi bi-arrow-up"></i> +15% this month
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="analytics-icon">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <div class="analytics-content">
+                        <h3 id="averageRating">4.9</h3>
+                        <p>Average Rating</p>
+                        <small class="analytics-trend neutral">
+                            <i class="bi bi-dash"></i> No change
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analytics-chart">
+                <h4>Weekly Activity</h4>
+                <div class="chart-container">
+                    <canvas id="activityChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="dashboard-section" id="quickActionsSection">
+            <h2><i class="bi bi-lightning-charge"></i> Quick Actions</h2>
+            <div class="quick-actions-grid">
+                <button class="quick-action-btn" onclick="openBulkMessageModal()">
+                    <div class="action-icon">
+                        <i class="bi bi-envelope-fill"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4>Send Bulk Message</h4>
+                        <p>Message all mentees at once</p>
+                    </div>
+                </button>
+                
+                <button class="quick-action-btn" onclick="window.location.href='mentor_chat.html'">
+                    <div class="action-icon">
+                        <i class="bi bi-chat-square-dots-fill"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4>Open Chat</h4>
+                        <p>Start chatting with mentees</p>
+                    </div>
+                </button>
+                
+                <button class="quick-action-btn" onclick="openScheduleModal()">
+                    <div class="action-icon">
+                        <i class="bi bi-calendar-plus-fill"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4>Schedule Session</h4>
+                        <p>Book a session with mentee</p>
+                    </div>
+                </button>
+                
+               
+                
+                <button class="quick-action-btn" onclick="generateReport()">
+                    <div class="action-icon">
+                        <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4>Generate Report</h4>
+                        <p>Create progress reports</p>
+                    </div>
+                </button>
+                
+                <button class="quick-action-btn" onclick="openResourcesModal()">
+                    <div class="action-icon">
+                        <i class="bi bi-book-fill"></i>
+                    </div>
+                    <div class="action-content">
+                        <h4>Resources</h4>
+                        <p>Share helpful materials</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="dashboard-section" id="recentActivitySection">
+            <h2><i class="bi bi-clock-history"></i> Recent Activity</h2>
+            <div class="activity-timeline">
+                <div class="activity-item">
+                    <div class="activity-time">2 min ago</div>
+                    <div class="activity-content">
+                        <div class="activity-icon message">
+                            <i class="bi bi-chat-fill"></i>
+                        </div>
+                        <div class="activity-text">
+                            <strong>Sarah Johnson</strong> sent you a message about her workout plan
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-time">15 min ago</div>
+                    <div class="activity-content">
+                        <div class="activity-icon session">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                        <div class="activity-text">
+                            Completed session with <strong>Mike Chen</strong> - Goal Achievement Review
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-time">1 hour ago</div>
+                    <div class="activity-content">
+                        <div class="activity-icon new-mentee">
+                            <i class="bi bi-person-plus"></i>
+                        </div>
+                        <div class="activity-text">
+                            New mentee <strong>Emma Davis</strong> has been assigned to you
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-time">3 hours ago</div>
+                    <div class="activity-content">
+                        <div class="activity-icon rating">
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <div class="activity-text">
+                            <strong>Alex Rodriguez</strong> rated your session 5 stars
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="view-all-btn" onclick="viewAllActivity()">
+                <i class="bi bi-arrow-right"></i>
+                View All Activity
+            </button>
+        </div>
+    </main>
+
+    <!-- Profile Update Modal -->
+    <div id="profileUpdateModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="bi bi-person-gear"></i> Update Profile</h3>
+                <button class="close-modal" id="closeProfileModal">&times;</button>
+            </div>
+            <form id="profileUpdateForm" class="profile-update-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required readonly>
+                        <small>Email cannot be changed. Contact support if needed.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="18" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="specialty">Specialization *</label>
+                    <select id="specialty" name="specialty" required>
+                        <option value="">Select Your Specialty</option>
+                        <option value="Nutrition">Nutrition</option>
+                        <option value="Fitness">Fitness & Exercise</option>
+                        <option value="Weight Loss">Weight Loss</option>
+                        <option value="Muscle Building">Muscle Building</option>
+                        <option value="Mental Health">Mental Health & Wellness</option>
+                        <option value="Sports Medicine">Sports Medicine</option>
+                        <option value="Physical Therapy">Physical Therapy</option>
+                        <option value="Dietary Planning">Dietary Planning</option>
+                        <option value="Lifestyle Coaching">Lifestyle Coaching</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Years of Experience</label>
+                    <input type="number" id="experience" name="experience" min="0" max="50" placeholder="e.g., 5">
+                </div>
+
+                <div class="form-group">
+                    <label for="certifications">Certifications</label>
+                    <textarea id="certifications" name="certifications" rows="3" placeholder="List your relevant certifications, licenses, or qualifications"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Professional Bio *</label>
+                    <textarea id="bio" name="bio" rows="4" required placeholder="Tell us about your background, expertise, and approach to mentoring. This will be visible to mentees."></textarea>
+                    <small id="bioCount">0/500 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="languages">Languages Spoken</label>
+                    <input type="text" id="languages" name="languages" placeholder="e.g., English, Spanish, French">
+                    <small>Separate multiple languages with commas</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location" placeholder="City, State/Country">
+                    </div>
+                    <div class="form-group">
+                        <label for="timezone">Timezone</label>
+                        <select id="timezone" name="timezone">
+                            <option value="">Select Timezone</option>
+                            <option value="UTC-12">UTC-12 (International Date Line West)</option>
+                            <option value="UTC-11">UTC-11 (Samoa)</option>
+                            <option value="UTC-10">UTC-10 (Hawaii)</option>
+                            <option value="UTC-9">UTC-9 (Alaska)</option>
+                            <option value="UTC-8">UTC-8 (Pacific Time)</option>
+                            <option value="UTC-7">UTC-7 (Mountain Time)</option>
+                            <option value="UTC-6">UTC-6 (Central Time)</option>
+                            <option value="UTC-5">UTC-5 (Eastern Time)</option>
+                            <option value="UTC-4">UTC-4 (Atlantic Time)</option>
+                            <option value="UTC-3">UTC-3 (Argentina)</option>
+                            <option value="UTC-2">UTC-2 (Mid-Atlantic)</option>
+                            <option value="UTC-1">UTC-1 (Azores)</option>
+                            <option value="UTC+0">UTC+0 (London, Dublin)</option>
+                            <option value="UTC+1">UTC+1 (Central European Time)</option>
+                            <option value="UTC+2">UTC+2 (Eastern European Time)</option>
+                            <option value="UTC+3">UTC+3 (Moscow, Istanbul)</option>
+                            <option value="UTC+4">UTC+4 (Dubai, Baku)</option>
+                            <option value="UTC+5">UTC+5 (Pakistan, Uzbekistan)</option>
+                            <option value="UTC+5:30">UTC+5:30 (India, Sri Lanka)</option>
+                            <option value="UTC+6">UTC+6 (Bangladesh, Kazakhstan)</option>
+                            <option value="UTC+7">UTC+7 (Thailand, Vietnam)</option>
+                            <option value="UTC+8">UTC+8 (China, Singapore)</option>
+                            <option value="UTC+9">UTC+9 (Japan, Korea)</option>
+                            <option value="UTC+10">UTC+10 (Australia East)</option>
+                            <option value="UTC+11">UTC+11 (Solomon Islands)</option>
+                            <option value="UTC+12">UTC+12 (New Zealand)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="availability">Availability</label>
+                    <textarea id="availability" name="availability" rows="3" placeholder="Describe your typical availability (e.g., Weekdays 9 AM - 5 PM EST, Weekend mornings)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="rates">Session Rates (Optional)</label>
+                    <input type="text" id="rates" name="rates" placeholder="e.g., $50/hour, $30/30min session">
+                    <small>This helps mentees understand your pricing structure</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="socialLinks">Professional Links</label>
+                    <div class="social-links-container">
+                        <input type="url" id="linkedin" name="linkedin" placeholder="LinkedIn Profile URL">
+                        <input type="url" id="website" name="website" placeholder="Personal/Professional Website">
+                        <input type="url" id="portfolio" name="portfolio" placeholder="Portfolio URL">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelProfileUpdate">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Healthiet. All rights reserved.</p>
+    </footer>
+
+    <!-- Centralized Authentication System: Only include ONCE, before dashboard JS -->
+    <script src="js/globalAuth.js"></script>
+    <script src="js/mentor_dashboard.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Ensure global message container exists for auth messages
+            if (!document.getElementById('auth-message')) {
+                const msgDiv = document.createElement('div');
+                msgDiv.id = 'auth-message';
+                document.body.appendChild(msgDiv);
+            }
+
+            // Enhanced logout button handler
+            const logoutButton = document.getElementById('logoutButton');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function() {
+                    if (window.authManager) {
+                        window.authManager.showMessage('Logging out...', 'info');
+                        setTimeout(() => {
+                            window.authManager.logout();
+                        }, 800);
+                    }
+                });
+            }
+
+            if (typeof updateAuthUI === "function") updateAuthUI();
+            window.addEventListener('storage', function() {
+                if (typeof updateAuthUI === "function") updateAuthUI();
+            });
+        });
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

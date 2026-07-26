@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Portal Access</title>
+    <script src="js/clientLogger.js"></script>
+    <script src="js/auth.js"></script>
+</head>
+<body>
+    <h2>Direct Admin Portal Test</h2>
+    
+    <div>
+        <h3>Step 1: Login as Admin</h3>
+        <form id="loginForm">
+            <input type="email" name="email" value="admin@healthiet.com" placeholder="Email" required>
+            <input type="password" name="password" value="adminpassword123" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    
+    <div id="loginResult"></div>
+    
+    <div>
+        <h3>Step 2: Test Admin Access</h3>
+        <button onclick="testAdminAccess()">Test Admin Portal Access</button>
+        <button onclick="goToAdminPortal()">Go to Admin Portal</button>
+    </div>
+    
+    <div id="accessResult"></div>
+    
+    <script>
+        function testAdminAccess() {
+            const isAuth = window.authManager.isAuthenticated();
+            const user = window.authManager.getUser();
+            const role = window.authManager.getUserRole();
+            
+            console.log('Auth status:', isAuth);
+            console.log('User:', user);
+            console.log('Role:', role);
+            
+            document.getElementById('accessResult').innerHTML = `
+                <h4>Authentication Status:</h4>
+                <p><strong>Is Authenticated:</strong> ${isAuth}</p>
+                <p><strong>User Role:</strong> ${role}</p>
+                <p><strong>User Data:</strong> <pre>${JSON.stringify(user, null, 2)}</pre></p>
+            `;
+            
+            // Test requireAuth function
+            try {
+                const hasAccess = window.authManager.requireAuth('Admin');
+                document.getElementById('accessResult').innerHTML += `
+                    <p><strong>Admin Access:</strong> ${hasAccess}</p>
+                `;
+            } catch (error) {
+                document.getElementById('accessResult').innerHTML += `
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        }
+        
+        function goToAdminPortal() {
+            window.location.href = 'admin_portal.html';
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = e.target.email.value;
+            const password = e.target.password.value;
+            
+            const result = await window.authManager.login(email, password);
+            
+            if (result.success) {
+                document.getElementById('loginResult').innerHTML = `
+                    <div style="color: green;">
+                        <h4>Login Successful!</h4>
+                        <p>User: ${result.user.email}</p>
+                        <p>Role: ${result.user.role}</p>
+                    </div>
+                `;
+                
+                // Auto-test access after login
+                setTimeout(testAdminAccess, 1000);
+            } else {
+                document.getElementById('loginResult').innerHTML = `
+                    <div style="color: red;">
+                        <h4>Login Failed</h4>
+                        <p>Error: ${result.message}</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>

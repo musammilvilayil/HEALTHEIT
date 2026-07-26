@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Debug - Healthiet</title>
+    <script src="js/auth.js"></script>
+</head>
+<body>
+    <h1>Authentication Debug</h1>
+    <div id="debug-info"></div>
+    <button onclick="debugAuth()">Check Auth Status</button>
+    <button onclick="clearStorage()">Clear Storage</button>
+    
+    <script>
+        function debugAuth() {
+            const debugDiv = document.getElementById('debug-info');
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token');
+            const user = localStorage.getItem('currentUser');
+            const userRole = localStorage.getItem('userRole');
+            
+            let output = '<h3>Debug Information:</h3>';
+            output += '<p><strong>Token exists:</strong> ' + (!!token) + '</p>';
+            output += '<p><strong>Token value:</strong> ' + (token ? token.substring(0, 50) + '...' : 'null') + '</p>';
+            output += '<p><strong>User data:</strong> ' + (user || 'null') + '</p>';
+            output += '<p><strong>Legacy userRole:</strong> ' + (userRole || 'null') + '</p>';
+            
+            if (window.authManager) {
+                output += '<p><strong>AuthManager exists:</strong> true</p>';
+                output += '<p><strong>Is Authenticated:</strong> ' + window.authManager.isAuthenticated() + '</p>';
+                output += '<p><strong>User Role:</strong> ' + window.authManager.getUserRole() + '</p>';
+                output += '<p><strong>User ID:</strong> ' + window.authManager.getUserId() + '</p>';
+                output += '<p><strong>User Object:</strong> ' + JSON.stringify(window.authManager.getUser()) + '</p>';
+                
+                const user = window.authManager.getUser();
+                if (user) {
+                    output += '<h4>User Object Details:</h4>';
+                    output += '<p><strong>user.role:</strong> ' + user.role + '</p>';
+                    output += '<p><strong>user.userRole:</strong> ' + user.userRole + '</p>';
+                    output += '<p><strong>user.isAdmin:</strong> ' + user.isAdmin + '</p>';
+                    output += '<p><strong>user.id:</strong> ' + user.id + '</p>';
+                    output += '<p><strong>user._id:</strong> ' + user._id + '</p>';
+                    output += '<p><strong>user.firstName:</strong> ' + user.firstName + '</p>';
+                    output += '<p><strong>user.lastName:</strong> ' + user.lastName + '</p>';
+                    output += '<p><strong>user.email:</strong> ' + user.email + '</p>';
+                }
+            } else {
+                output += '<p><strong>AuthManager exists:</strong> false</p>';
+            }
+            
+            debugDiv.innerHTML = output;
+        }
+        
+        function clearStorage() {
+            localStorage.clear();
+            alert('Storage cleared!');
+            debugAuth();
+        }
+        
+        // Auto-run debug on load
+        setTimeout(debugAuth, 1000);
+    </script>
+</body>
+<!--#include file="components/universal-footer.html" -->
+</html>
