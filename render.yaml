@@ -5,7 +5,7 @@ services:
     region: singapore
     plan: free
     rootDir: healthiet
-    buildCommand: npm install --no-audit --no-fund
+    buildCommand: npm ci --no-audit --no-fund
     startCommand: npm start
     healthCheckPath: /health
     autoDeploy: true
@@ -21,7 +21,11 @@ services:
       - key: ADMIN_EMAIL
         sync: false
       - key: ADMIN_PASSWORD
-        generateValue: true
+        sync: false
+      - key: ADMIN_FIRST_NAME
+        value: Healthiet
+      - key: ADMIN_LAST_NAME
+        value: Admin
       - key: EMAIL_HOST
         value: smtp.gmail.com
       - key: EMAIL_PORT
