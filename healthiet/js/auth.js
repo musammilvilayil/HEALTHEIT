@@ -43,6 +43,30 @@
     getUserRole() { return this.getUser()?.role || localStorage.getItem('userRole') || null; }
     isAuthenticated() { return Boolean(this.getToken() && this.getUser()); }
 
+    async login(email, password) {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Login failed');
+      this.setAuth(data.token, data.user);
+      return data;
+    }
+
+    async register(email, password) {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Registration failed');
+      this.setAuth(data.token, data.user);
+      return data;
+    }
+
     async apiRequest(url, options = {}) {
       const headers = new Headers(options.headers || {});
       const token = this.getToken();
