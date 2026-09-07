@@ -701,9 +701,7 @@
             // Helper to fetch JSON with auth
             async function fetchWithAuth(url) {
                 const token = localStorage.getItem('authToken') || localStorage.getItem('token') || '';
-                const baseURL = 'http://localhost:5000';
-                const fullURL = url.startsWith('http') ? url : `${baseURL}${url}`;
-                const res = await fetch(fullURL, { headers: { 'Authorization': 'Bearer ' + token } });
+                const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
                 return res.json();
             }
 
